@@ -23,6 +23,8 @@ public class DataInsertCliente extends DataBundleCliente {
         return clienteEntity;
     }
 
+
+
     @Column(name = "IdCliente", nullable = false)
     @Id
     public int getIdCliente() {

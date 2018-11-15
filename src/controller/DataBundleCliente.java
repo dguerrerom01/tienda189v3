@@ -13,6 +13,7 @@ public abstract class DataBundleCliente {
     HttpSession session;
 
     public DataBundleCliente(HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
+
         session = request.getSession();
 
         new GuardadorDeRequesParamsEnSession().guardarDatosSesion(request,session);

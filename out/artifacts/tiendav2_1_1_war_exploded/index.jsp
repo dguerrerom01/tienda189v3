@@ -30,7 +30,7 @@
   </div>
 
 
-  <c:if test="${not empty error}">
+  <c:if test="${not empty mensaje}">
     <div class="etiqueta s8">
         ${mensaje}
     </div>

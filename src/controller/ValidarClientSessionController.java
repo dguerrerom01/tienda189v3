@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,55 +26,56 @@ public class ValidarClientSessionController extends HttpServlet {
 
     HttpSession session;
 
+
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         session = request.getSession();
-
-        LoginClienteEntity cliente = new LoginClienteEntity();
-
         request.setCharacterEncoding("UTF-8");
 
         response.setContentType("text/html");
 
-        String error = "";
+        RequestDispatcher rd;
 
-        List<IValidacion> validador = new ArrayList<IValidacion>();
+        DataSessionCliente dataSessionCliente = null;
 
-        RequestDispatcher rd = request.getRequestDispatcher("clientSession.jsp");
-        cliente.setUsuarioCliente(request.getParameter("clientUsuario"));
+        try {
+            dataSessionCliente = new DataSessionCliente(request);
 
-        validador.add(new ValidacionUsuario(cliente.getUsuarioCliente()));
-        error += ValidacionMultiValidation.validar(validador);
-        if (!(error.length() > 0)) {
-            validador.clear();
-
-            validador.add(new ValidacionPassword(cliente.getPasswordCliente()));
-            error += ValidacionMultiValidation.validar(validador);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
         }
-        if (error.length() > 0){
-            request.setAttribute("error", error);
-        }else {
 
-            request.setAttribute("error", "Validado ok");
+        ValidacionUsuario validacionUsuario = new ValidacionUsuario(dataSessionCliente.getUsuarioCliente());
+        if(validacionUsuario.validar()) {
 
-            ClienteDAO clienteDAO = new ClienteDAO();
+            ValidacionPassword validacionPassword = new ValidacionPassword(dataSessionCliente.getPasswordCliente());
 
-            String login = clienteDAO.get_nif_login(cliente);
-            System.out.println("login:" + login);
+            if(validacionPassword.validar()){
 
-            if (login != "null"){
+                //verificamos si está en BD
+                ClienteDAO clienteDAO = new ClienteDAO();
 
-                session.setAttribute("nif", login);
-                login = ("Hola ").concat(login);
-                request.setAttribute("mensaje", login);
+                String login = clienteDAO.get_nif_login(dataSessionCliente.getLoginClienteEntity());
 
-            }
-            else request.setAttribute("mensaje", "Cliente NO login");
+                if (!login.equals("null")){
 
-            rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
+                    request.setAttribute("mensaje", ("Hola ").concat(login));
 
-            rd.forward(request, response);
-        }
+                    rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
+
+                    rd.forward(request, response);
+
+                }else request.setAttribute("mensaje", "Cliente NO coincide login");
+
+            }else request.setAttribute("mensaje", validacionPassword.getError());
+
+        } else request.setAttribute("mensaje", validacionUsuario.getError());
+
+        rd = request.getRequestDispatcher("cliente/clientSesion.jsp");
+
+        rd.forward(request, response);
+
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);

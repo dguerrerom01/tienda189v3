@@ -29,105 +29,114 @@ public class ValidarClientInsertController extends HttpServlet {
 
         session = request.getSession();
 
-        DataInsertCliente  dataInsertCliente = null;
-
-        try {
-           dataInsertCliente = new DataInsertCliente(request);
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-       /* ClienteEntity cliente = new ClienteEntity();
-
-        // new GuardadorDeRequesParamsEnSession().guardarDatosSesion(request,session);
-
-        try {
-
-           // new CreadorDeObjetosConSessionAtributes(session,cliente);
-
-        }  catch (IllegalAccessException | InvocationTargetException e) {
-
-            System.out.println("Error creando el objeto");
-        }
-
-        /*
-        Esto seria otra opcion para crear cliente con los valores del session
-         pero el creadorDeObjetoConSession es reutilizable y no repite codigo
-        try {
-            ClienteEntity clienteConConstructorPropio = new ClienteEntity(session);
-        } catch (IllegalAccessException e) {
-            System.out.println("error creando cliente con constructor session");
-        }
-        */
         request.setCharacterEncoding("UTF-8");
 
         response.setContentType("text/html");
 
-        String error = "";
+        RequestDispatcher rd = request.getRequestDispatcher("cliente/clientInsert.jsp");
 
-        List<IValidacion> validador = new ArrayList<IValidacion>();
-
-        RequestDispatcher rd = request.getRequestDispatcher("clientInsert.jsp");
-
-        boolean continuar = true;
-        if(continuar) continuar = new ValidacionDNINIECIF(dataInsertCliente.getNifCliente()).validar();
-        if(continuar) continuar = new ValidacionLetrasConEspacio(dataInsertCliente.getNombreCliente()).validar();
-        if(continuar) continuar = new ValidacionLongitud(dataInsertCliente.getNombreCliente(), 3, 50).validar();
-        if(continuar) continuar = new ValidacionLetrasConEspacio(dataInsertCliente.getApellidosCliente()).validar();
-        if(continuar) continuar = new ValidacionLongitud(dataInsertCliente.getApellidosCliente(), 3, 100).validar();
-        if(continuar) continuar = new ValidacionCodigoPostal(dataInsertCliente.getCodigoPostalClient()).validar();
-        if(continuar) continuar = new ValidarDomicilio(dataInsertCliente.getDomicilioCliente()).validar();
-        if(continuar) continuar = new ValidacionLongitud(dataInsertCliente.getDomicilioCliente(), 2, 100).validar();
-        if(continuar) continuar = new ValidacionTelefonoSpain(dataInsertCliente.getTelefonoCliente()).validar();
-        if(continuar) continuar = new ValidacionTelefonoSpain(dataInsertCliente.getMovilCliente()).validar();
-        if(continuar) continuar = new ValidacionFecha(dataInsertCliente.getFechaNacimiento()).validar();
-        if(continuar) continuar = new ValidacionSexo(dataInsertCliente.getSexoCliente()).validar();
-        if(continuar) continuar = new ValidacionEmail(dataInsertCliente.getEmailCliente()).validar();
-        if(continuar) continuar = new ValidacionUsuario(dataInsertCliente.getUsuarioCliente()).validar();
-        if(continuar) continuar = new ValidacionPassword(dataInsertCliente.getPasswordCliente()).validar();
-
-        ClienteRoll clienteRoll = new ClienteRoll();
-
-        CPDAO cpdao = new CPDAO(clienteRoll.getUsuario(), clienteRoll.getPass());
+        DataInsertCliente  dataInsertCliente = null;
 
         try {
-            if (!cpdao.check_cp(dataInsertCliente.getCodigoPostalClient())) {
 
-                error = "Codigo Postal Inexistente";
-            }
-        } catch (SQLException e) {
+           dataInsertCliente = new DataInsertCliente(request);
+
+        } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
 
+        ValidacionDNINIECIF validacionDNINIECIF = new ValidacionDNINIECIF(dataInsertCliente.getNifCliente());
+        if(validacionDNINIECIF.validar()) {
+
+            ValidacionLetrasConEspacio validacionLetrasConEspacio = new ValidacionLetrasConEspacio(dataInsertCliente.getNombreCliente());
+            if(validacionLetrasConEspacio.validar()){
+                ValidacionLongitud validacionLongitud = new ValidacionLongitud(dataInsertCliente.getNombreCliente(), 3, 50);
+                if(validacionLongitud.validar()){
+                    validacionLetrasConEspacio = new ValidacionLetrasConEspacio(dataInsertCliente.getApellidosCliente());
+                    if(validacionLetrasConEspacio.validar()){
+                        validacionLongitud = new ValidacionLongitud(dataInsertCliente.getApellidosCliente(), 3, 100);
+                        if(validacionLongitud.validar()){
+                            ValidacionCodigoPostal validacionCodigoPostal = new ValidacionCodigoPostal(dataInsertCliente.getCodigoPostalClient());
+                            if(validacionCodigoPostal.validar()){
+                                ValidarDomicilio validarDomicilio = new ValidarDomicilio(dataInsertCliente.getDomicilioCliente());
+                                if(validarDomicilio.validar()){
+                                    validacionLongitud = new ValidacionLongitud(dataInsertCliente.getDomicilioCliente(), 2, 100);
+                                    if(validacionLongitud.validar()){
+                                        ValidacionTelefonoSpain validacionTelefonoSpain = new ValidacionTelefonoSpain(dataInsertCliente.getTelefonoCliente());
+                                        if(validacionTelefonoSpain.validar()){
+                                            validacionTelefonoSpain = new ValidacionTelefonoSpain(dataInsertCliente.getMovilCliente());
+                                            if(validacionTelefonoSpain.validar()){
+                                                ValidacionFecha validacionFecha = new ValidacionFecha(dataInsertCliente.getFechaNacimiento());
+                                                if(validacionFecha.validar()){
+                                                    ValidacionSexo validacionSexo = new ValidacionSexo(dataInsertCliente.getSexoCliente());
+                                                    if(validacionSexo.validar()){
+                                                        ValidacionEmail validacionEmail = new ValidacionEmail(dataInsertCliente.getEmailCliente());
+                                                        if(validacionEmail.validar()){
+                                                            ValidacionUsuario validacionUsuario = new ValidacionUsuario(dataInsertCliente.getUsuarioCliente());
+                                                            if(validacionUsuario.validar()){
+                                                                ValidacionPassword validacionPassword = new ValidacionPassword(dataInsertCliente.getPasswordCliente());
+                                                                if(validacionPassword.validar()){
+
+                                                                    ClienteRoll clienteRoll = new ClienteRoll();
+
+                                                                    CPDAO cpdao = new CPDAO(clienteRoll.getUsuario(), clienteRoll.getPass());
 
 
-        if (error.length() > 0) {
-            request.setAttribute("error", error);
-        } else {
-            request.setAttribute("error", "Todo Correcto");
-            clientFotoLoad(request, response);
-            dataInsertCliente.setImagenCliente(dataInsertCliente.getNifCliente() + ".png");
+                                                                    try {
+                                                                        if (!cpdao.check_cp(dataInsertCliente.getCodigoPostalClient())) {
 
-            rd = request.getRequestDispatcher("index.jsp");
+                                                                            request.setAttribute("error", "Codigo Postal Inexistente");
 
-            /*
-          //    cliente para BD sin procedure
-            ClienteDAO clienteDAO = new ClienteDAO();
-           if (clienteDAO.add_cliente(cliente)>0){
-               request.setAttribute("mensaje", "Cliente add");
-           }
-           else request.setAttribute("mensaje", "Cliente NO add");
-           */
+                                                                        }
+                                                                    } catch (SQLException e) {
+                                                                        e.printStackTrace();
+                                                                    }
 
-            //    cliente para BD CON procedure
-            ClienteDAO clienteDAO = new ClienteDAO();
-            if (clienteDAO.add_cliente_procedure(dataInsertCliente.getClienteEntity())) {
-                request.setAttribute("mensaje", "Cliente add");
-            } else request.setAttribute("mensaje", "Cliente NO add");
+                                                                    clientFotoLoad(request, response);
 
-        }
+                                                                    dataInsertCliente.setImagenCliente(dataInsertCliente.getNifCliente() + ".png");
 
-        rd.forward(request, response);
+
+                                                                    ClienteDAO clienteDAO = new ClienteDAO();
+
+                                                                        if (clienteDAO.add_cliente_procedure(dataInsertCliente.getClienteEntity())) {
+                                                                            request.setAttribute("mensaje", "Cliente add");
+                                                                            rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
+                                                                        } else request.setAttribute("error", "Cliente NO add");
+
+
+                                                                }else request.setAttribute("error",validacionUsuario.getError());
+
+                                                            }else request.setAttribute("error",validacionUsuario.getError());
+
+                                                        }else request.setAttribute("error",validacionEmail.getError());
+
+                                                    }else request.setAttribute("error",validacionSexo.getError());
+
+                                                }else request.setAttribute("error", validacionFecha.getError());
+
+                                            }else request.setAttribute("error", validacionTelefonoSpain.getError());
+
+                                        }else request.setAttribute("error", validacionTelefonoSpain.getError());
+
+                                    }else request.setAttribute("error", validacionLongitud.getError());
+
+                                }else request.setAttribute("error", validarDomicilio.getError());
+
+                            }else request.setAttribute("error", validacionCodigoPostal.getError());
+
+                        }else request.setAttribute("error", validacionLongitud.getError());
+
+                    }else request.setAttribute("error", validacionLetrasConEspacio.getError());
+
+                }else request.setAttribute("error", validacionLongitud.getError());
+
+            }else request.setAttribute("error", validacionLetrasConEspacio.getError());
+
+        }else request.setAttribute("error", validacionDNINIECIF.getError());
+
+
+       rd.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
