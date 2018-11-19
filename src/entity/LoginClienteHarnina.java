@@ -1,16 +1,16 @@
 package entity;
 
 
-public class LoginClienteEntity {
+public class LoginClienteHarnina {
 
     private String nifCliente;
     private String usuarioCliente;
     private String passwordCliente;
 
-    public LoginClienteEntity() {
+    public LoginClienteHarnina() {
 
     }
-    public LoginClienteEntity(String usuario, String password) {
+    public LoginClienteHarnina(String usuario, String password) {
         this.usuarioCliente = usuario;
         this.passwordCliente = password;
     }

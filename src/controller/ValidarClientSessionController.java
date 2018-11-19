@@ -1,9 +1,7 @@
 package controller;
 
+import cliente.DataLoginCliente;
 import dao.clienteDAO.ClienteDAO;
-import entity.LoginClienteEntity;
-import validate.IValidacion;
-import validate.ValidacionMultiValidation;
 import validate.ValidacionPassword;
 import validate.ValidacionUsuario;
 
@@ -16,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet("/valiCliSesion")
 public class ValidarClientSessionController extends HttpServlet {
@@ -26,21 +22,20 @@ public class ValidarClientSessionController extends HttpServlet {
 
     HttpSession session;
 
-
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         session = request.getSession();
+
         request.setCharacterEncoding("UTF-8");
 
         response.setContentType("text/html");
 
-        RequestDispatcher rd;
+        RequestDispatcher rd = request.getRequestDispatcher("cliente/clientSesion.jsp");
 
-        DataSessionCliente dataSessionCliente = null;
+        DataLoginCliente dataSessionCliente = null;
 
         try {
-            dataSessionCliente = new DataSessionCliente(request);
+            dataSessionCliente = new DataLoginCliente(request);
 
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
@@ -57,22 +52,26 @@ public class ValidarClientSessionController extends HttpServlet {
                 ClienteDAO clienteDAO = new ClienteDAO();
 
                 String login = clienteDAO.get_nif_login(dataSessionCliente.getLoginClienteEntity());
+                session.setAttribute("nifClient",login);
 
                 if (!login.equals("null")){
 
                     request.setAttribute("mensaje", ("Hola ").concat(login));
 
-                    rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
+                    String opcion = request.getParameter("opcion");
 
-                    rd.forward(request, response);
+                    String url;
+
+                    if (opcion.equals("null")) url = "cliente/clienteIndex.jsp";
+                    else url = "cliente/" + opcion + ".jsp";
+System.out.println(url);
+                    rd = request.getRequestDispatcher(url);
 
                 }else request.setAttribute("mensaje", "Cliente NO coincide login");
 
             }else request.setAttribute("mensaje", validacionPassword.getError());
 
         } else request.setAttribute("mensaje", validacionUsuario.getError());
-
-        rd = request.getRequestDispatcher("cliente/clientSesion.jsp");
 
         rd.forward(request, response);
 

@@ -1,9 +1,9 @@
 package controller;
 
+import cliente.DataPersonCliente;
 import dao.clienteDAO.ClienteDAO;
 import dao.clienteDAO.ClienteRoll;
 import dao.cp.CPDAO;
-import entity.ClienteEntity;
 import validate.*;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,8 +13,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 @WebServlet("/valiCliIn")
 @MultipartConfig
@@ -35,11 +34,11 @@ public class ValidarClientInsertController extends HttpServlet {
 
         RequestDispatcher rd = request.getRequestDispatcher("cliente/clientInsert.jsp");
 
-        DataInsertCliente  dataInsertCliente = null;
+        DataPersonCliente dataInsertCliente = null;
 
         try {
 
-           dataInsertCliente = new DataInsertCliente(request);
+           dataInsertCliente = new DataPersonCliente(request);
 
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
@@ -47,7 +46,6 @@ public class ValidarClientInsertController extends HttpServlet {
 
         ValidacionDNINIECIF validacionDNINIECIF = new ValidacionDNINIECIF(dataInsertCliente.getNifCliente());
         if(validacionDNINIECIF.validar()) {
-
             ValidacionLetrasConEspacio validacionLetrasConEspacio = new ValidacionLetrasConEspacio(dataInsertCliente.getNombreCliente());
             if(validacionLetrasConEspacio.validar()){
                 ValidacionLongitud validacionLongitud = new ValidacionLongitud(dataInsertCliente.getNombreCliente(), 3, 50);
@@ -56,7 +54,7 @@ public class ValidarClientInsertController extends HttpServlet {
                     if(validacionLetrasConEspacio.validar()){
                         validacionLongitud = new ValidacionLongitud(dataInsertCliente.getApellidosCliente(), 3, 100);
                         if(validacionLongitud.validar()){
-                            ValidacionCodigoPostal validacionCodigoPostal = new ValidacionCodigoPostal(dataInsertCliente.getCodigoPostalClient());
+                            ValidacionCodigoPostal validacionCodigoPostal = new ValidacionCodigoPostal(dataInsertCliente.getCodigoPostalCliente());
                             if(validacionCodigoPostal.validar()){
                                 ValidarDomicilio validarDomicilio = new ValidarDomicilio(dataInsertCliente.getDomicilioCliente());
                                 if(validarDomicilio.validar()){
@@ -66,7 +64,7 @@ public class ValidarClientInsertController extends HttpServlet {
                                         if(validacionTelefonoSpain.validar()){
                                             validacionTelefonoSpain = new ValidacionTelefonoSpain(dataInsertCliente.getMovilCliente());
                                             if(validacionTelefonoSpain.validar()){
-                                                ValidacionFecha validacionFecha = new ValidacionFecha(dataInsertCliente.getFechaNacimiento());
+                                               ValidacionFecha validacionFecha = new ValidacionFecha(dataInsertCliente.getFechaNacimiento());
                                                 if(validacionFecha.validar()){
                                                     ValidacionSexo validacionSexo = new ValidacionSexo(dataInsertCliente.getSexoCliente());
                                                     if(validacionSexo.validar()){
@@ -83,7 +81,7 @@ public class ValidarClientInsertController extends HttpServlet {
 
 
                                                                     try {
-                                                                        if (!cpdao.check_cp(dataInsertCliente.getCodigoPostalClient())) {
+                                                                        if (!cpdao.check_cp(dataInsertCliente.getCodigoPostalCliente())) {
 
                                                                             request.setAttribute("error", "Codigo Postal Inexistente");
 
@@ -99,10 +97,10 @@ public class ValidarClientInsertController extends HttpServlet {
 
                                                                     ClienteDAO clienteDAO = new ClienteDAO();
 
-                                                                        if (clienteDAO.add_cliente_procedure(dataInsertCliente.getClienteEntity())) {
+                                                                    if (clienteDAO.add_cliente_procedure(dataInsertCliente.getClienteEntity())) {
                                                                             request.setAttribute("mensaje", "Cliente add");
                                                                             rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
-                                                                        } else request.setAttribute("error", "Cliente NO add");
+                                                                    } else request.setAttribute("error", "Cliente NO add");
 
 
                                                                 }else request.setAttribute("error",validacionUsuario.getError());
@@ -158,7 +156,7 @@ public class ValidarClientInsertController extends HttpServlet {
 
         Part filePart = request.getPart("imagenCliente");
         String fileName = getFileName(filePart);
-        String dniCliente = request.getParameter("dniCliente");
+        String dniCliente = request.getParameter("nifCliente");
 
         if (fileName.length() > 2) {
 

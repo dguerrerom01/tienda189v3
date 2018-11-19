@@ -1,35 +1,28 @@
-package controller;
+package cliente;
 
+import utils.POJOCreatorSession;
 import entity.ClienteEntity;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
 
-public class DataInsertCliente extends DataBundleCliente {
+public class DataPersonCliente extends DataBundleCliente {
 
     private ClienteEntity clienteEntity = new ClienteEntity();
 
-    public DataInsertCliente(HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
+    public DataPersonCliente(HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
+
         super(request);
-        new CreadorDeObjetosConSessionAtributes(session,clienteEntity);
+
+        new POJOCreatorSession(session,clienteEntity);
     }
 
     public ClienteEntity getClienteEntity() {
         return clienteEntity;
     }
 
-
-
-    @Column(name = "IdCliente", nullable = false)
-    @Id
-    public int getIdCliente() {
-        return clienteEntity.getIdCliente();
-    }
 
     @Column(name = "NifCliente", nullable = false, length = 9)
     @Basic
@@ -107,14 +100,9 @@ public class DataInsertCliente extends DataBundleCliente {
         return clienteEntity.getPasswordCliente();
     }
 
-    @Column(name = "fechaAlta", nullable = false)
-    @Basic
-    public Timestamp getFechaAlta() {
-        return clienteEntity.getFechaAlta();
-    }
 
-    public String getCodigoPostalClient() {
-        return clienteEntity.getCodigoPostalClient();
+    public String getCodigoPostalCliente() {
+        return clienteEntity.getCodigoPostalCliente();
     }
 
 }

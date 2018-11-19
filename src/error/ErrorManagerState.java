@@ -1,6 +1,6 @@
 package error;
 
-import controller.DataBundleCliente;
+import cliente.DataBundleCliente;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

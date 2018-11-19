@@ -1,6 +1,8 @@
-package controller;
+package cliente;
 
-import entity.LoginClienteEntity;
+import utils.GuardadorDeRequesParamsEnSession;
+import utils.POJOCreatorSession;
+import entity.LoginClienteHarnina;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -8,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public abstract class DataBundleCliente {
 
-    LoginClienteEntity loginClienteEntity = new LoginClienteEntity();
+    LoginClienteHarnina loginClienteEntity = new LoginClienteHarnina();
 
     HttpSession session;
 
@@ -18,7 +20,7 @@ public abstract class DataBundleCliente {
 
         new GuardadorDeRequesParamsEnSession().guardarDatosSesion(request,session);
 
-        new CreadorDeObjetosConSessionAtributes(session,loginClienteEntity);
+        new POJOCreatorSession(session,loginClienteEntity);
     }
 
 }

@@ -35,12 +35,13 @@
             ${mensaje}
     </div>
 </c:if>
+
 <div class="contenedor01">
 
     <div class="contenido01">
-        <div><a href="cliente/clientUpdateLogin.jsp">Modificar Login </a></div>
-        <div><a href="cliente/clientUpdateDaper.jsp">Modificar Datos Personales</a></div>
-        <div><a href="cliente/clientDelete.jsp">Eliminar </a></div>
+        <div><a href="cliente/clientSesion.jsp?opcion=clientUpdateLogin&operacion=Confirmar">Modificar Login </a></div>
+        <div><a href="cliente/clientSesion.jsp?opcion=clientUpdateDaper">Modificar Datos Personales</a></div>
+        <div><a href="cliente/clientSesion.jsp?opcion=clientDelete">Eliminar </a></div>
     </div>
 
 </div>
