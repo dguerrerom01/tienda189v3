@@ -1,11 +1,12 @@
 package validate;
 
+import error.EstadoError;
+
 public class ValidacionExtensionFile extends ValidacionListOfValues implements IValidacion {
 
 
     private String value;
     private String [] lista_extension;
-    private final String error = "Extension no valida";
 
     public ValidacionExtensionFile(String value,String [] listaExtension) {
         this.value = value;
@@ -13,12 +14,12 @@ public class ValidacionExtensionFile extends ValidacionListOfValues implements I
     }
 
     @Override
-    public boolean validar() {
-        return super.validar(value, lista_extension);
+    public int exec() {
+
+        if(super.validar(value, lista_extension)) return EstadoError.ERROR_NULL.getId();
+            else return EstadoError.ERROR_EXTENSION_BAD.getId();
+
     }
 
-    @Override
-    public String getError() {
-        return error;
-    }
+
 }

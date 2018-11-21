@@ -39,7 +39,7 @@
 
     <div class="contenido01">
       <div><a href="cliente/clientInsert.jsp">Añadir Cliente</a></div>
-      <div><a href="cliente/clientSesion.jsp?operacion=New">Iniciar Sesión</a></div>
+      <div><a href="cliente/clientSesion.jsp?operacion=New&opcion=clienteIndex">Iniciar Sesión</a></div>
     </div>
 
   </div>

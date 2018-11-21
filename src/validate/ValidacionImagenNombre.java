@@ -2,9 +2,13 @@ package validate;
 
 
 
+import error.EstadoError;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ValidacionImagenNombre extends ValidacionMultiValidation implements IValidacion{
+public class ValidacionImagenNombre extends ValidacionMultiValidation implements IValidacionList{
 
     private String value;
     private String [] lista = {"jpg" , "png"};
@@ -13,7 +17,8 @@ public class ValidacionImagenNombre extends ValidacionMultiValidation implements
         this.value = value;
     }
 
-    public boolean validar(){
+
+    public ArrayList<Integer> exec(){
 
         assertTrue(value.contains("."));
 
@@ -23,7 +28,6 @@ public class ValidacionImagenNombre extends ValidacionMultiValidation implements
 
         IValidacion [] validadores = {new ValidacionExtensionFile(extension,this.lista) ,new ValidacionLetrasSinEspacio(nombreImagen)};
 
-        return super.validar(validadores);
-
+        return   super.validar(validadores);
     }
 }

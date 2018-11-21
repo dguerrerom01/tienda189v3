@@ -1,5 +1,7 @@
 package validate;
 
+import error.EstadoError;
+
 public class ValidacionPassword extends ValidacionRegularExpression implements IValidacion {
 
     private static final String patron =  "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!-_%*?&])[A-Za-z\\d$@$!-_%*?&]{8,15}[\\S]$";
@@ -19,12 +21,11 @@ public class ValidacionPassword extends ValidacionRegularExpression implements I
 
     }
     @Override
-    public boolean validar(){
-        return super.validar(value,patron);
+    public int exec(){
+
+        if(super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
+           else return EstadoError.ERROR_PASSWORD_BAD.getId();
     }
 
-    @Override
-    public String getError() {
-        return mensajeError;
-    }
+
 }

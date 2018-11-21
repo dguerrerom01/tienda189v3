@@ -1,10 +1,10 @@
 package validate;
 
+import error.EstadoError;
+
 public class ValidacionLetrasSinEspacio extends ValidacionRegularExpression implements IValidacion {
 
     private String patron =  "^([a-zA-ZñÑáéíóúÁÉÍÓÚ\\S]*)$";
-
-    private static final String mensajeError = "La cadena contiene espacios";
 
     private String value;
 
@@ -13,13 +13,12 @@ public class ValidacionLetrasSinEspacio extends ValidacionRegularExpression impl
     }
 
     @Override
-    public boolean validar() {
-        return super.validar(value, patron);
+    public int exec() {
+
+        if(super.validar(value, patron)) return EstadoError.ERROR_NULL.getId();
+            else return EstadoError.ERROR_LETTER_ONLY.getId();
     }
 
-    @Override
-    public String getError() {
-        return mensajeError;
-    }
+
 
 }

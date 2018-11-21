@@ -20,7 +20,7 @@ public class ReflexionRs {
 
             HashMap<String, Object> datosFila = new HashMap<>();
 
-            for (int i = 1; i < rs.getMetaData().getColumnCount() + 1; i++) {
+            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
 
                 //System.out.println("rs.getMetaData().getColumnName(i).toString()" + rs.getMetaData().getColumnName(i).toString() + " rs.getString(i):" +rs.getString(i));
 

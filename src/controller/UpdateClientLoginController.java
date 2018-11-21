@@ -37,7 +37,7 @@ public class UpdateClientLoginController extends HttpServlet {
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
-
+/*
         ValidacionUsuario validacionUsuario = new ValidacionUsuario(dataSessionCliente.getUsuarioCliente());
         if(validacionUsuario.validar()) {
 
@@ -59,7 +59,7 @@ public class UpdateClientLoginController extends HttpServlet {
             }else request.setAttribute("mensaje", validacionPassword.getError());
 
         } else request.setAttribute("mensaje", validacionUsuario.getError());
-
+*/
         RequestDispatcher rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
         rd.forward(request, response);
 

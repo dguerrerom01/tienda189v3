@@ -22,8 +22,6 @@ public class PojoFillerDB {
 
         Object genericObject = genericClass.newInstance();
 
-        SimpleDateFormat formatoDelTexto = new SimpleDateFormat("yyyy-MM-dd");
-
         Method[] metodosDeclarados = genericObject.getClass().getDeclaredMethods();
 
         Field[] atributos = genericObject.getClass().getDeclaredFields();
@@ -35,28 +33,14 @@ public class PojoFillerDB {
                 if (metodosDeclarados[i].getName().toLowerCase().contains("set" + atributos[j].getName().toLowerCase())) {
 
                     System.out.println("metodo: " + metodosDeclarados[i].getName() + "\t|atributo: " + atributos[j].getName() + "\t|dato: " + datosFila.get(atributos[j].getName().toString()));//datosFila.get(atributos[j].getName().toString()));  //.toString()));
-/*
-                    //metodosDeclarados[i].invoke(genericObject, datosFila.get(atributos[j].getName().toString()));
-                   if (datosFila.get(atributos[j].getName()) != null && atributos[j].getName() == "FechaNacimiento") {
+                    try {
+                        metodosDeclarados[i].invoke(genericObject, datosFila.get(atributos[j].getName())); //.toString()));
+                    }catch (IllegalArgumentException e){
+                        SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String dateFormat = simpleFormat.format(datosFila.get(atributos[j].getName()));
+                        metodosDeclarados[i].invoke(genericObject,dateFormat);
+                    }
 
-                       System.out.println("formatoDelTexto.parse((String) datosFila.get(atributos[j].getName().toString()))" + formatoDelTexto.parse((String) datosFila.get(atributos[j].getName().toString())));
-                       SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                       Date date = d.parse((String) datosFila.get(atributos[j].getName().toString()));
-                       System.out.println(DateFormat.getDateInstance().format(date));
-                       LocalDate localDate = LocalDate.parse( "1961-02-13" );
-                       DateTimeFormatter f = DateTimeFormatter.ofPattern( "MMdduuuu" );
-                       String input = String.format("%08d", 2131961) ;
-                       localDate = LocalDate.parse( input , f );
-                       System.out.println(localDate);
-                       date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                       System.out.println(date);
-
-                       metodosDeclarados[i].invoke(genericObject, date);
-                   }
-                     else   metodosDeclarados[i].invoke(genericObject, datosFila.get(atributos[j].getName().toString()));
-
-*/
-                    metodosDeclarados[i].invoke(genericObject, datosFila.get(atributos[j].getName())); //.toString()));
                 }
 
             }

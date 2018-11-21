@@ -1,10 +1,10 @@
 package validate;
 
+import error.EstadoError;
+
 public class ValidarDomicilio extends ValidacionRegularExpression implements IValidacion {
 
     private static final String patron = "^([0-9ºª.:,/a-zA-ZñÑáéíóúÜüÁÉÍÓÚ\\s]*)$";
-
-    private static final String mensajeError = "Domicilio: solo letras, números y espacio";
 
     private String value;
 
@@ -13,12 +13,11 @@ public class ValidarDomicilio extends ValidacionRegularExpression implements IVa
     }
 
     @Override
-    public boolean validar() {
-        return super.validar(value,patron);
+    public int exec() {
+
+        if(super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
+           else return EstadoError.ERROR_DOMICILIO_BAD.getId();
     }
 
-    @Override
-    public String getError() {
-        return mensajeError;
-    }
+
 }

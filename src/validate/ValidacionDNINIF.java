@@ -1,14 +1,16 @@
 package validate;
 
+import error.EstadoError;
+
 public class ValidacionDNINIF implements IValidacion{
+
     private String dni;
-    private  String mensajeError = "DNI Incorrecto";
 
     public ValidacionDNINIF(String dni) {
         this.dni = dni;
     }
     @Override
-    public boolean validar() {
+    public int exec() {
 
         String letraMayuscula = (this.dni.substring(8)).toUpperCase();
 
@@ -16,24 +18,16 @@ public class ValidacionDNINIF implements IValidacion{
 
         if(dni.length() != 9 || Character.isLetter(this.dni.charAt(8)) == false ) {
 
-            this.mensajeError = "Cadena distinta a 9 caracteres y  el último caracter no es una letra";
-
-            return false;
+            return EstadoError.ERROR_NIF_LENGTH.getId();
         }
 
         if(soloNumeros(losNumeros) == true && getLetraDNI().equals(letraMayuscula)) {
 
-            return true;
+            return EstadoError.ERROR_NULL.getId();
         }
-        this.mensajeError = "8 dígitos entre los 8 primeros caracteres y una la letra al final que corresponde para esos digitos";
-
-        return false;
+       return EstadoError.ERROR_NIF_8DIGIT_LETTER.getId();
     }
 
-    @Override
-    public String getError() {
-        return mensajeError;
-    }
 
     private boolean soloNumeros(String cadena) {
 

@@ -1,10 +1,10 @@
 package validate;
 
+import error.EstadoError;
+
 public class ValidacionLongitud implements IValidacion{
 
     private String cadena;
-
-    private  String mensajeError = "Longitud Incorrecta";
 
     private int minimo;
 
@@ -23,17 +23,14 @@ public class ValidacionLongitud implements IValidacion{
 
 
     @Override
-    public boolean validar() {
+    public int exec() {
 
        if (this.minimo <= this.cadena.length() && this.cadena.length()<= this.maximo){
 
-           return true;
+           return EstadoError.ERROR_NULL.getId();
        }
-        return false;
+        return EstadoError.ERROR_INTERVALO.getId();
     }
 
-    @Override
-    public String getError() {
-        return mensajeError;
-    }
+
 }

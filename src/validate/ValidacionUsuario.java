@@ -1,5 +1,7 @@
 package validate;
 
+import error.EstadoError;
+
 public class ValidacionUsuario extends ValidacionRegularExpression implements IValidacion {
 
     // Los usuarios tienen 7 dígitos.
@@ -19,12 +21,10 @@ public class ValidacionUsuario extends ValidacionRegularExpression implements IV
 
     }
     @Override
-    public boolean validar(){
-        return super.validar(value,patron);
+    public int exec(){
+        if (super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
+         else return  EstadoError.ERROR_USUARIO_BAD.getId();
     }
 
-    @Override
-    public String getError() {
-        return mensajeError;
-    }
+
 }

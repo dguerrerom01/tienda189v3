@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.InvocationTargetException;
 
-public abstract class DataBundleCliente {
+public  class DataBundleCliente {
 
     LoginClienteHarnina loginClienteEntity = new LoginClienteHarnina();
 

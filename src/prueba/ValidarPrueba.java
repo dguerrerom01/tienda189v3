@@ -8,7 +8,7 @@ public class ValidarPrueba {
 
         ValidacionNIFCIF obj = new ValidacionNIFCIF("A62565312");
 
-
+/*
         if(!obj.validar()){
             System.out.println( obj.getError());
         }
@@ -16,7 +16,7 @@ public class ValidarPrueba {
             System.out.println(true);
         }
 
-
+*/
     }
 }
 

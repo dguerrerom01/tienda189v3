@@ -1,13 +1,13 @@
 package validate;
 
+import error.EstadoError;
+
 import java.util.regex.Pattern;
 
 public class ValidacionNIFCIF implements IValidacion{
 
       //A64908411
     private String nif;
-
-    private static final  String mensajeError = "NIF Incorrecto";
 
     private static final Pattern cifPattern = Pattern.compile("^([ABCDEFGHJKLMNPQRSUVW])(\\d{7})([0-9A-J])$");
     private static final String CONTROL_SOLO_NUMEROS = "ABEH"; // Sólo admiten números como caracter de control
@@ -21,18 +21,18 @@ public class ValidacionNIFCIF implements IValidacion{
 
 
     @Override
-    public boolean validar() {
+    public int exec() {
         try {
             if (!cifPattern.matcher(this.nif).matches()) {
                 // No cumple el patrón
-                return false;
+                return EstadoError.ERROR_NOPATTERN.getId();
             }
 
             int parA = 0;
             for (int i = 2; i < 8; i += 2) {
                 final int digito = Character.digit(this.nif.charAt(i), 10);
                 if (digito < 0) {
-                    return false;
+                    return EstadoError.ERROR_NIF_8DIGIT_LETTER.getId();
                 }
                 parA += digito;
             }
@@ -41,7 +41,7 @@ public class ValidacionNIFCIF implements IValidacion{
             for (int i = 1; i < 9; i += 2) {
                 final int digito = Character.digit(this.nif.charAt(i), 10);
                 if (digito < 0) {
-                    return false;
+                    return EstadoError.ERROR_CIF_BAD.getId();
                 }
                 int nn = 2 * digito;
                 if (nn > 9) {
@@ -62,16 +62,12 @@ public class ValidacionNIFCIF implements IValidacion{
                             ||
                             // ¿el caracter de control es válido como dígito?
                             (CONTROL_SOLO_LETRAS.indexOf(letraIni) < 0 && digitoD == Character.digit(caracterFin, 10));
-            return esControlValido;
+            if(esControlValido) return EstadoError.ERROR_NULL.getId();
+                    else return EstadoError.ERROR_CIF_BAD.getId();
 
         } catch (Exception e) {
-            return false;
+            return EstadoError.ERROR_MISSING.getId();
         }
 
-    }
-
-    @Override
-    public String getError() {
-        return mensajeError;
     }
 }

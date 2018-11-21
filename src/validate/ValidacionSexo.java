@@ -1,5 +1,7 @@
 package validate;
 
+import error.EstadoError;
+
 public class ValidacionSexo extends  ValidacionListOfValues implements IValidacion {
     private static final String [] valores  = {"m" , "f"};
 
@@ -12,13 +14,11 @@ public class ValidacionSexo extends  ValidacionListOfValues implements IValidaci
     }
 
     @Override
-    public boolean validar(){
-        return super.validar(value,valores);
+    public int exec(){
+        if (super.validar(value,valores)) return EstadoError.ERROR_NULL.getId();
+           else return EstadoError.ERROR_NOTIN.getId();
     }
 
-    @Override
-    public String getError(){
-        return this.error;
-    }
+
 
 }

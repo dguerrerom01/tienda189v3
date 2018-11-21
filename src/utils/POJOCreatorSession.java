@@ -22,12 +22,19 @@ public class POJOCreatorSession {
                 }
             }
         }
-
     }
 
     private void fillField(HttpSession session, Object object, Method m, Field f) throws IllegalAccessException, InvocationTargetException {
 
-        m.invoke(object,session.getAttribute(f.getName()));
+        // public void setApellidosCliente(String apellidosCliente) {
+        //        this.apellidosCliente = apellidosCliente;
+        //    }
+        // m = setApellidosCliente
+
+        // object = ClienteEntity
+        // session.getAttribute(f.getName()) = 76233324K
+
+              m.invoke(object,session.getAttribute(f.getName()));
     }
 
     private boolean isSetter(Method m, Field f) {

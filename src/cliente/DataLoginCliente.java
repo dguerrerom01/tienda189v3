@@ -8,11 +8,10 @@ import java.lang.reflect.InvocationTargetException;
 
 public class DataLoginCliente extends DataBundleCliente {
 
-    private LoginClienteHarnina loginClienteEntity = new LoginClienteHarnina();
 
     public DataLoginCliente(HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
         super(request);
-        new POJOCreatorSession(session,loginClienteEntity);
+
     }
 
     public LoginClienteHarnina getLoginClienteEntity() {

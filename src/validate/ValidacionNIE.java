@@ -1,5 +1,7 @@
 package validate;
 
+import error.EstadoError;
+
 //X1234567L
 public class ValidacionNIE implements IValidacion{
 
@@ -12,7 +14,7 @@ public class ValidacionNIE implements IValidacion{
     }
 
     @Override
-    public boolean validar() {
+    public int exec() {
 
         boolean esValido = false;
         int i = 1;
@@ -48,11 +50,8 @@ public class ValidacionNIE implements IValidacion{
             esValido = (letra == asignacionLetra[resto]);
         }
 
-        return esValido;
+        if(esValido) return EstadoError.ERROR_NULL.getId();
+            else return EstadoError.ERROR_NIE_BAD.getId();
     }
 
-    @Override
-    public String getError() {
-        return mensajeError;
-    }
 }

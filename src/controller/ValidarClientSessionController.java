@@ -2,6 +2,7 @@ package controller;
 
 import cliente.DataLoginCliente;
 import dao.clienteDAO.ClienteDAO;
+import error.EstadoError;
 import validate.ValidacionPassword;
 import validate.ValidacionUsuario;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 @WebServlet("/valiCliSesion")
 public class ValidarClientSessionController extends HttpServlet {
@@ -21,6 +23,8 @@ public class ValidarClientSessionController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     HttpSession session;
+
+    // lista de validaciones
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -41,37 +45,39 @@ public class ValidarClientSessionController extends HttpServlet {
             e.printStackTrace();
         }
 
-        ValidacionUsuario validacionUsuario = new ValidacionUsuario(dataSessionCliente.getUsuarioCliente());
-        if(validacionUsuario.validar()) {
+        ArrayList<Integer> listaErrores = new ArrayList<Integer>();
 
-            ValidacionPassword validacionPassword = new ValidacionPassword(dataSessionCliente.getPasswordCliente());
+        listaErrores.add(new ValidacionUsuario(dataSessionCliente.getUsuarioCliente()).exec());
+        listaErrores.add(new ValidacionPassword(dataSessionCliente.getPasswordCliente()).exec());
 
-            if(validacionPassword.validar()){
+        String mensaje = "";
 
-                //verificamos si está en BD
-                ClienteDAO clienteDAO = new ClienteDAO();
+        for(Integer error:listaErrores){
+            for (EstadoError estado : EstadoError.values()){
+                if(error == estado.getId() & error != 0) mensaje = mensaje.concat(estado.getMsg());
+            }
+        }
+        request.setAttribute("mensaje", mensaje);
 
-                String login = clienteDAO.get_nif_login(dataSessionCliente.getLoginClienteEntity());
-                session.setAttribute("nifClient",login);
+         if(mensaje.equals("")) {
 
-                if (!login.equals("null")){
+             ClienteDAO clienteDAO = new ClienteDAO();
 
-                    request.setAttribute("mensaje", ("Hola ").concat(login));
+             String nifLogin = clienteDAO.get_nif_login(dataSessionCliente.getLoginClienteEntity());
 
-                    String opcion = request.getParameter("opcion");
+             session.setAttribute("nifClient", nifLogin);
 
-                    String url;
+             if (!nifLogin.equals("null")) {
 
-                    if (opcion.equals("null")) url = "cliente/clienteIndex.jsp";
-                    else url = "cliente/" + opcion + ".jsp";
-System.out.println(url);
-                    rd = request.getRequestDispatcher(url);
+                 request.setAttribute("mensaje", ("Hola ").concat(nifLogin));
 
-                }else request.setAttribute("mensaje", "Cliente NO coincide login");
+                 String opcion = request.getParameter("opcion");
 
-            }else request.setAttribute("mensaje", validacionPassword.getError());
+                 rd = request.getRequestDispatcher("cliente/" + opcion + ".jsp");
 
-        } else request.setAttribute("mensaje", validacionUsuario.getError());
+             } else request.setAttribute("mensaje", "Cliente NO coincide login");
+
+         }
 
         rd.forward(request, response);
 

@@ -1,5 +1,7 @@
 package validate;
 
+import error.EstadoError;
+
 /**
  * Clase que calcula o valida un documento de identificación del reino de España. (DNI,NIE,CIF).
  * @author yo
@@ -17,23 +19,20 @@ public class ValidacionDNINIECIF implements IValidacion{
     }
 
     @Override
-    public boolean validar() {
+    public int exec() {
         ValidacionDNINIF validacionDNINIF = new ValidacionDNINIF(documento);
-        if (!validacionDNINIF.validar()){
+        if (validacionDNINIF.exec()!= 0){
             ValidacionNIE validacionNIE = new ValidacionNIE(documento);
-            if(!validacionNIE.validar()){
+            if(validacionNIE.exec() != 0){
                 ValidacionNIFCIF validacionNIFCIF = new ValidacionNIFCIF(documento);
-                if(!validacionNIFCIF.validar()){
-                    return false;
+                if(validacionNIFCIF.exec() != 0){
+                    return EstadoError.ERROR_NIF_8DIGIT_LETTER.getId();
                 }
             }
         }
-        return true;
+        return EstadoError.ERROR_NULL.getId();
     }
 
-    @Override
-    public String getError() {
-        return mensajeError;
-    }
+
 
 }

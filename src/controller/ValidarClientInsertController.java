@@ -43,7 +43,7 @@ public class ValidarClientInsertController extends HttpServlet {
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
-
+/*
         ValidacionDNINIECIF validacionDNINIECIF = new ValidacionDNINIECIF(dataInsertCliente.getNifCliente());
         if(validacionDNINIECIF.validar()) {
             ValidacionLetrasConEspacio validacionLetrasConEspacio = new ValidacionLetrasConEspacio(dataInsertCliente.getNombreCliente());
@@ -133,7 +133,7 @@ public class ValidarClientInsertController extends HttpServlet {
 
         }else request.setAttribute("error", validacionDNINIECIF.getError());
 
-
+*/
        rd.forward(request, response);
     }
 
