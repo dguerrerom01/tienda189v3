@@ -1,6 +1,5 @@
 package cliente;
 
-import utils.POJOCreatorSession;
 import entity.LoginClienteHarnina;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +10,6 @@ public class DataLoginCliente extends DataBundleCliente {
 
     public DataLoginCliente(HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
         super(request);
-
     }
 
     public LoginClienteHarnina getLoginClienteEntity() {

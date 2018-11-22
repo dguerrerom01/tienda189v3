@@ -33,9 +33,9 @@
         <div class="dado d3 harnina"></div>
     </div>
 </div>
-<c:if test="${not empty error}">
+<c:if test="${not empty mensaje}">
     <div class="etiqueta s8">
-            ${error}
+            ${mensaje}
     </div>
 </c:if>
 

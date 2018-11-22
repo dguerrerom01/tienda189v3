@@ -1,7 +1,7 @@
 package dao.clienteDAO;
 
 import dao.AccesoDB;
-import dao.ReflexionRs;
+import reflexion.RsTransferArraylist;
 import entity.ClienteEntity;
 import entity.LoginClienteHarnina;
 
@@ -113,7 +113,7 @@ public class ClienteRoll {
 
         try {
 
-            return new ReflexionRs().getListGenericObject((CallableStatement) acceso.getConexion().prepareCall("{call getListaClientes()}"), clase);
+            return new RsTransferArraylist().getListGenericObject((CallableStatement) acceso.getConexion().prepareCall("{call getListaClientes()}"), clase);
 
         } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException | InvocationTargetException e) {
             e.printStackTrace();
@@ -127,9 +127,9 @@ public class ClienteRoll {
         this.conectar();
         String clase = ClienteEntity.class.getName();
         try {
-            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call getCliente(?)}");
+            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call get_daper_cliente(?)}");
             cstmt.setString(1, dni);
-            return new ReflexionRs().getGenericObject(cstmt, clase);
+            return new RsTransferArraylist().getGenericObject(cstmt, clase);
         } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException | InvocationTargetException e) {
             e.printStackTrace();
         } catch (ParseException e) {

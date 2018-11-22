@@ -1,7 +1,7 @@
 package cliente;
 
-import utils.GuardadorDeRequesParamsEnSession;
-import utils.POJOCreatorSession;
+import reflexion.RequestTransferSession;
+import reflexion.SessionTransferObject;
 import entity.LoginClienteHarnina;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,16 +11,16 @@ import java.lang.reflect.InvocationTargetException;
 public  class DataBundleCliente {
 
     LoginClienteHarnina loginClienteEntity = new LoginClienteHarnina();
-
     HttpSession session;
+
 
     public DataBundleCliente(HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
 
         session = request.getSession();
 
-        new GuardadorDeRequesParamsEnSession().guardarDatosSesion(request,session);
+        new RequestTransferSession().guardarDatosSesion(request,session);
 
-        new POJOCreatorSession(session,loginClienteEntity);
+        new SessionTransferObject(session,loginClienteEntity);
     }
 
 }

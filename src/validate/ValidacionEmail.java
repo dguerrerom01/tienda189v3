@@ -17,6 +17,6 @@ public class ValidacionEmail extends ValidacionRegularExpression implements IVal
     public int exec(){
         if (super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
 
-        else return EstadoError.ERROR_EMAIL_BAD.getId();
+            else return EstadoError.ERROR_EMAIL_BAD.getId();
     }
 }

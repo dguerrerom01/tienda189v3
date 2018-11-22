@@ -2,152 +2,143 @@ package entity;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "daper_cliente", schema = "tienda_harnina20189vistas")
 public class DaperClienteEntity {
-    private String NifCliente;
-    private String ApellidosCliente;
-    private String NombreCliente;
-    private String CodigoPostalCliente;
-    private String DomicilioCliente;
-    private Date FechaNacimiento;
-    private String TelefonoCliente;
-    private String MovilCliente;
-    private String SexoCliente;
-    private String EmailCliente;
-    private String ImagenCliente;
+
+    private String nifCliente;
+    private String apellidosCliente;
+    private String nombreCliente;
+    private String domicilioCliente;
+    private String codigoPostalCliente;
+    private String fechaNacimiento;
+    private String telefonoCliente;
+    private String movilCliente;
+    private String sexoCliente;
+    private String emailCliente;
+    private String imagenCliente;
+
+
 
     @Basic
     @Column(name = "NifCliente")
     public String getNifCliente() {
-        return NifCliente;
+        return nifCliente;
     }
 
     public void setNifCliente(String nifCliente) {
-        this.NifCliente = nifCliente;
+        this.nifCliente = nifCliente;
     }
 
     @Basic
     @Column(name = "ApellidosCliente")
     public String getApellidosCliente() {
-        return ApellidosCliente;
+        return apellidosCliente;
     }
 
     public void setApellidosCliente(String apellidosCliente) {
-        this.ApellidosCliente = apellidosCliente;
+        this.apellidosCliente = apellidosCliente;
     }
 
     @Basic
     @Column(name = "NombreCliente")
     public String getNombreCliente() {
-        return NombreCliente;
+        return nombreCliente;
     }
 
     public void setNombreCliente(String nombreCliente) {
-        this.NombreCliente = nombreCliente;
+        this.nombreCliente = nombreCliente;
     }
 
+    @Basic
+    @Column(name = "CodigoPostalCliente")
     public String getCodigoPostalCliente() {
-        return CodigoPostalCliente;
+        return codigoPostalCliente;
     }
 
-    public void setCodigoPostalCliente(String codigoPostalClient) {
-        this.CodigoPostalCliente = codigoPostalClient;
+    public void setCodigoPostalCliente(String codigoPostalCliente) {
+        this.codigoPostalCliente = codigoPostalCliente;
     }
 
     @Basic
     @Column(name = "DomicilioCliente")
     public String getDomicilioCliente() {
-        return DomicilioCliente;
+        return domicilioCliente;
     }
 
     public void setDomicilioCliente(String domicilioCliente) {
-        this.DomicilioCliente = domicilioCliente;
+        this.domicilioCliente = domicilioCliente;
     }
 
     @Basic
     @Column(name = "FechaNacimiento")
-    public Date getFechaNacimiento() {
-        return FechaNacimiento;
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        this.FechaNacimiento = fechaNacimiento;
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     @Basic
     @Column(name = "TelefonoCliente")
     public String getTelefonoCliente() {
-        return TelefonoCliente;
+        return telefonoCliente;
     }
 
     public void setTelefonoCliente(String telefonoCliente) {
-        this.TelefonoCliente = telefonoCliente;
+        this.telefonoCliente = telefonoCliente;
     }
 
     @Basic
     @Column(name = "MovilCliente")
     public String getMovilCliente() {
-        return MovilCliente;
+        return movilCliente;
     }
 
     public void setMovilCliente(String movilCliente) {
-        this.MovilCliente = movilCliente;
+        this.movilCliente = movilCliente;
     }
 
     @Basic
     @Column(name = "SexoCliente")
     public String getSexoCliente() {
-        return SexoCliente;
+        return sexoCliente;
     }
 
     public void setSexoCliente(String sexoCliente) {
-        this.SexoCliente = sexoCliente;
+        this.sexoCliente = sexoCliente;
     }
 
     @Basic
     @Column(name = "EmailCliente")
     public String getEmailCliente() {
-        return EmailCliente;
+        return emailCliente;
     }
 
     public void setEmailCliente(String emailCliente) {
-        this.EmailCliente = emailCliente;
+        this.emailCliente = emailCliente;
     }
 
     @Basic
     @Column(name = "ImagenCliente")
     public String getImagenCliente() {
-        return ImagenCliente;
+        return imagenCliente;
     }
 
     public void setImagenCliente(String imagenCliente) {
-        this.ImagenCliente = imagenCliente;
+        this.imagenCliente = imagenCliente;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DaperClienteEntity that = (DaperClienteEntity) o;
-        return Objects.equals(NifCliente, that.NifCliente) &&
-                Objects.equals(ApellidosCliente, that.ApellidosCliente) &&
-                Objects.equals(NombreCliente, that.NombreCliente) &&
-                Objects.equals(CodigoPostalCliente, that.CodigoPostalCliente) &&
-                Objects.equals(DomicilioCliente, that.DomicilioCliente) &&
-                Objects.equals(FechaNacimiento, that.FechaNacimiento) &&
-                Objects.equals(TelefonoCliente, that.TelefonoCliente) &&
-                Objects.equals(MovilCliente, that.MovilCliente) &&
-                Objects.equals(SexoCliente, that.SexoCliente) &&
-                Objects.equals(EmailCliente, that.EmailCliente) &&
-                Objects.equals(ImagenCliente, that.ImagenCliente);
-    }
+
+
 
     @Override
     public int hashCode() {
-        return Objects.hash(NifCliente, ApellidosCliente, NombreCliente, CodigoPostalCliente, DomicilioCliente, FechaNacimiento, TelefonoCliente, MovilCliente, SexoCliente, EmailCliente, ImagenCliente);
+        return Objects.hash( nifCliente, apellidosCliente, nombreCliente, domicilioCliente, fechaNacimiento, telefonoCliente, movilCliente, sexoCliente, emailCliente, imagenCliente);
     }
 
     private String id;

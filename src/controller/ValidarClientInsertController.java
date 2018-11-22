@@ -1,10 +1,15 @@
 package controller;
 
+import cliente.DataLoginCliente;
 import cliente.DataPersonCliente;
 import dao.clienteDAO.ClienteDAO;
 import dao.clienteDAO.ClienteRoll;
 import dao.cp.CPDAO;
-import validate.*;
+import entity.ClienteEntity;
+import error.EstadoError;
+import cliente.ComandosDaperCliente;
+import cliente.ComandosLoginCliente;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,7 +18,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 @WebServlet("/valiCliIn")
 @MultipartConfig
@@ -34,106 +39,85 @@ public class ValidarClientInsertController extends HttpServlet {
 
         RequestDispatcher rd = request.getRequestDispatcher("cliente/clientInsert.jsp");
 
-        DataPersonCliente dataInsertCliente = null;
-
+        DataPersonCliente dataPersonCliente = null;
         try {
-
-           dataInsertCliente = new DataPersonCliente(request);
+            dataPersonCliente = new DataPersonCliente(request);
 
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
-/*
-        ValidacionDNINIECIF validacionDNINIECIF = new ValidacionDNINIECIF(dataInsertCliente.getNifCliente());
-        if(validacionDNINIECIF.validar()) {
-            ValidacionLetrasConEspacio validacionLetrasConEspacio = new ValidacionLetrasConEspacio(dataInsertCliente.getNombreCliente());
-            if(validacionLetrasConEspacio.validar()){
-                ValidacionLongitud validacionLongitud = new ValidacionLongitud(dataInsertCliente.getNombreCliente(), 3, 50);
-                if(validacionLongitud.validar()){
-                    validacionLetrasConEspacio = new ValidacionLetrasConEspacio(dataInsertCliente.getApellidosCliente());
-                    if(validacionLetrasConEspacio.validar()){
-                        validacionLongitud = new ValidacionLongitud(dataInsertCliente.getApellidosCliente(), 3, 100);
-                        if(validacionLongitud.validar()){
-                            ValidacionCodigoPostal validacionCodigoPostal = new ValidacionCodigoPostal(dataInsertCliente.getCodigoPostalCliente());
-                            if(validacionCodigoPostal.validar()){
-                                ValidarDomicilio validarDomicilio = new ValidarDomicilio(dataInsertCliente.getDomicilioCliente());
-                                if(validarDomicilio.validar()){
-                                    validacionLongitud = new ValidacionLongitud(dataInsertCliente.getDomicilioCliente(), 2, 100);
-                                    if(validacionLongitud.validar()){
-                                        ValidacionTelefonoSpain validacionTelefonoSpain = new ValidacionTelefonoSpain(dataInsertCliente.getTelefonoCliente());
-                                        if(validacionTelefonoSpain.validar()){
-                                            validacionTelefonoSpain = new ValidacionTelefonoSpain(dataInsertCliente.getMovilCliente());
-                                            if(validacionTelefonoSpain.validar()){
-                                               ValidacionFecha validacionFecha = new ValidacionFecha(dataInsertCliente.getFechaNacimiento());
-                                                if(validacionFecha.validar()){
-                                                    ValidacionSexo validacionSexo = new ValidacionSexo(dataInsertCliente.getSexoCliente());
-                                                    if(validacionSexo.validar()){
-                                                        ValidacionEmail validacionEmail = new ValidacionEmail(dataInsertCliente.getEmailCliente());
-                                                        if(validacionEmail.validar()){
-                                                            ValidacionUsuario validacionUsuario = new ValidacionUsuario(dataInsertCliente.getUsuarioCliente());
-                                                            if(validacionUsuario.validar()){
-                                                                ValidacionPassword validacionPassword = new ValidacionPassword(dataInsertCliente.getPasswordCliente());
-                                                                if(validacionPassword.validar()){
 
-                                                                    ClienteRoll clienteRoll = new ClienteRoll();
+        DataLoginCliente dataLoginCliente = null;
+        try {
+            dataLoginCliente = new DataLoginCliente(request);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
-                                                                    CPDAO cpdao = new CPDAO(clienteRoll.getUsuario(), clienteRoll.getPass());
+        ArrayList<Integer> listaErrores = new ArrayList<Integer>();
 
+        ComandosDaperCliente comandosDaperCliente = new ComandosDaperCliente(dataPersonCliente.getDaperClienteEntity());
+        listaErrores = comandosDaperCliente.getComands();
 
-                                                                    try {
-                                                                        if (!cpdao.check_cp(dataInsertCliente.getCodigoPostalCliente())) {
+        ComandosLoginCliente comandosLogin = new ComandosLoginCliente(dataLoginCliente.getLoginClienteEntity());
+        listaErrores.addAll(comandosLogin.getCommands());
 
-                                                                            request.setAttribute("error", "Codigo Postal Inexistente");
+        String mensaje = "";
 
-                                                                        }
-                                                                    } catch (SQLException e) {
-                                                                        e.printStackTrace();
-                                                                    }
+        for(Integer error:listaErrores){
+            for (EstadoError estado : EstadoError.values()){
+                if(error == estado.getId() & error != 0) mensaje = mensaje.concat(estado.getMsg());
+            }
+        }
+        request.setAttribute("mensaje", mensaje);
 
-                                                                    clientFotoLoad(request, response);
+        if(mensaje.equals("")) {
 
-                                                                    dataInsertCliente.setImagenCliente(dataInsertCliente.getNifCliente() + ".png");
+            ClienteRoll clienteRoll = new ClienteRoll();
 
+            CPDAO cpdao = new CPDAO(clienteRoll.getUsuario(), clienteRoll.getPass());
+// Mejorarlo
+            try {
+                if (!cpdao.check_cp(dataPersonCliente.getCodigoPostalCliente())) {
 
-                                                                    ClienteDAO clienteDAO = new ClienteDAO();
+                    request.setAttribute("mensaje", "Codigo Postal Inexistente");
 
-                                                                    if (clienteDAO.add_cliente_procedure(dataInsertCliente.getClienteEntity())) {
-                                                                            request.setAttribute("mensaje", "Cliente add");
-                                                                            rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
-                                                                    } else request.setAttribute("error", "Cliente NO add");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
+            clientFotoLoad(request, response);
 
-                                                                }else request.setAttribute("error",validacionUsuario.getError());
+            dataPersonCliente.setImagenCliente(dataPersonCliente.getNifCliente() + ".png");
 
-                                                            }else request.setAttribute("error",validacionUsuario.getError());
+ // Mejorarlo trasvase de una entidad a otra
+             ClienteEntity clienteEntity = new ClienteEntity();
+            clienteEntity.setNifCliente(dataPersonCliente.getNifCliente());
+            clienteEntity.setApellidosCliente(dataPersonCliente.getApellidosCliente());
+            clienteEntity.setNombreCliente(dataPersonCliente.getNombreCliente());
+            clienteEntity.setDomicilioCliente(dataPersonCliente.getDomicilioCliente());
+            clienteEntity.setCodigoPostalCliente(dataPersonCliente.getCodigoPostalCliente());
+            clienteEntity.setFechaNacimiento(dataPersonCliente.getFechaNacimiento().toString());
+            clienteEntity.setTelefonoCliente(dataPersonCliente.getTelefonoCliente());
+            clienteEntity.setMovilCliente(dataPersonCliente.getMovilCliente());
+            clienteEntity.setSexoCliente(dataPersonCliente.getSexoCliente());
+            clienteEntity.setEmailCliente(dataPersonCliente.getEmailCliente());
+            clienteEntity.setImagenCliente(dataPersonCliente.getImagenCliente());
+            clienteEntity.setUsuarioCliente(dataLoginCliente.getUsuarioCliente());
+            clienteEntity.setPasswordCliente(dataLoginCliente.getPasswordCliente());
 
-                                                        }else request.setAttribute("error",validacionEmail.getError());
+            ClienteDAO clienteDAO = new ClienteDAO();
 
-                                                    }else request.setAttribute("error",validacionSexo.getError());
+            if (clienteDAO.add_cliente_procedure(clienteEntity)) {
+                request.setAttribute("mensaje", "Cliente add");
+                rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
+            } else request.setAttribute("mensaje", "Cliente NO add");
 
-                                                }else request.setAttribute("error", validacionFecha.getError());
+        }
 
-                                            }else request.setAttribute("error", validacionTelefonoSpain.getError());
-
-                                        }else request.setAttribute("error", validacionTelefonoSpain.getError());
-
-                                    }else request.setAttribute("error", validacionLongitud.getError());
-
-                                }else request.setAttribute("error", validarDomicilio.getError());
-
-                            }else request.setAttribute("error", validacionCodigoPostal.getError());
-
-                        }else request.setAttribute("error", validacionLongitud.getError());
-
-                    }else request.setAttribute("error", validacionLetrasConEspacio.getError());
-
-                }else request.setAttribute("error", validacionLongitud.getError());
-
-            }else request.setAttribute("error", validacionLetrasConEspacio.getError());
-
-        }else request.setAttribute("error", validacionDNINIECIF.getError());
-
-*/
        rd.forward(request, response);
     }
 
@@ -185,5 +169,7 @@ public class ValidarClientInsertController extends HttpServlet {
             bufIN.close();
         }
     }
+
+
 }
 

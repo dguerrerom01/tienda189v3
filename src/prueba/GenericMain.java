@@ -2,7 +2,6 @@ package prueba;
 
 import dao.clienteDAO.ClienteDAO;
 import entity.ClienteEntity;
-import entity.DaperClienteHarnina;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

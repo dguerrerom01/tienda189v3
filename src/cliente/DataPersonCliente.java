@@ -1,108 +1,84 @@
 package cliente;
 
-import utils.POJOCreatorSession;
-import entity.ClienteEntity;
+import entity.DaperClienteEntity;
+import reflexion.SessionTransferObject;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 
 public class DataPersonCliente extends DataBundleCliente {
 
-    private ClienteEntity clienteEntity = new ClienteEntity();
+    private DaperClienteEntity daperClienteEntity = new DaperClienteEntity();
 
     public DataPersonCliente(HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
-
         super(request);
 
-        new POJOCreatorSession(session,clienteEntity);
+        new SessionTransferObject(session,daperClienteEntity);
     }
 
-    public ClienteEntity getClienteEntity() {
-        return clienteEntity;
+    public DaperClienteEntity getDaperClienteEntity() {
+
+        return daperClienteEntity;
     }
 
 
-    @Column(name = "NifCliente", nullable = false, length = 9)
-    @Basic
+
     public String getNifCliente() {
-        return clienteEntity.getNifCliente();
+        return daperClienteEntity.getNifCliente();
     }
 
-    @Column(name = "ApellidosCliente", nullable = false, length = 100)
-    @Basic
+
     public String getApellidosCliente() {
-        return clienteEntity.getApellidosCliente();
+        return daperClienteEntity.getApellidosCliente();
     }
 
-    @Column(name = "NombreCliente", nullable = false, length = 50)
-    @Basic
+
     public String getNombreCliente() {
-        return clienteEntity.getNombreCliente();
+        return daperClienteEntity.getNombreCliente();
     }
 
-    @Column(name = "DomicilioCliente", nullable = false, length = 100)
-    @Basic
+
     public String getDomicilioCliente() {
-        return clienteEntity.getDomicilioCliente();
+        return daperClienteEntity.getDomicilioCliente();
     }
 
-    @Column(name = "FechaNacimiento", nullable = false)
-    @Basic
+
     public String getFechaNacimiento() {
-        return clienteEntity.getFechaNacimiento();
+        return daperClienteEntity.getFechaNacimiento();
     }
 
-    @Column(name = "TelefonoCliente", nullable = false, length = 20)
-    @Basic
+
     public String getTelefonoCliente() {
-        return clienteEntity.getTelefonoCliente();
+        return daperClienteEntity.getTelefonoCliente();
     }
 
-    @Column(name = "MovilCliente", nullable = false, length = 20)
-    @Basic
+
     public String getMovilCliente() {
-        return clienteEntity.getMovilCliente();
+        return daperClienteEntity.getMovilCliente();
     }
 
-    @Column(name = "SexoCliente", nullable = false, length = 1)
-    @Basic
+
     public String getSexoCliente() {
-        return clienteEntity.getSexoCliente();
+        return daperClienteEntity.getSexoCliente();
     }
 
-    @Column(name = "EmailCliente", nullable = false, length = 150)
-    @Basic
+
     public String getEmailCliente() {
-        return clienteEntity.getEmailCliente();
+        return daperClienteEntity.getEmailCliente();
     }
 
-    @Column(name = "ImagenCliente", nullable = false, length = 15)
-    @Basic
+
     public String getImagenCliente() {
-        return clienteEntity.getImagenCliente();
+        return daperClienteEntity.getImagenCliente();
     }
 
-    public void setImagenCliente(String imagenCliente) {
-        clienteEntity.setImagenCliente(imagenCliente);
-    }
-
-    @Column(name = "UsuarioCliente", nullable = false, length = 30)
-    @Basic
-    public String getUsuarioCliente() {
-        return clienteEntity.getUsuarioCliente();
-    }
-
-    @Column(name = "PasswordCliente", nullable = false, length = 50)
-    @Basic
-    public String getPasswordCliente() {
-        return clienteEntity.getPasswordCliente();
+   public void setImagenCliente(String imagenCliente) {
+       daperClienteEntity.setImagenCliente(imagenCliente);
     }
 
 
     public String getCodigoPostalCliente() {
-        return clienteEntity.getCodigoPostalCliente();
+        return daperClienteEntity.getCodigoPostalCliente();
     }
 
 }
