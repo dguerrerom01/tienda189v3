@@ -64,4 +64,4 @@
 <script src="../js/jsStore/error.js"></script>
 <script src="../js/jsStore/submit.js"></script>
 <script src="../js/jsStore/validate.js"></script>
-<script src="../js/jsStore/cliente.js"></script>
+<script src="../js/jsStore/clienteStrategyOne.js"></script>

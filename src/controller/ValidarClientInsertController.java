@@ -1,14 +1,11 @@
 package controller;
 
-import cliente.DataLoginCliente;
-import cliente.DataPersonCliente;
+import cliente.*;
 import dao.clienteDAO.ClienteDAO;
 import dao.clienteDAO.ClienteRoll;
 import dao.cp.CPDAO;
 import entity.ClienteEntity;
 import error.EstadoError;
-import cliente.ComandosDaperCliente;
-import cliente.ComandosLoginCliente;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,22 +44,12 @@ public class ValidarClientInsertController extends HttpServlet {
             e.printStackTrace();
         }
 
-        DataLoginCliente dataLoginCliente = null;
-        try {
-            dataLoginCliente = new DataLoginCliente(request);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
         ArrayList<Integer> listaErrores = new ArrayList<Integer>();
 
-        ComandosDaperCliente comandosDaperCliente = new ComandosDaperCliente(dataPersonCliente.getDaperClienteEntity());
-        listaErrores = comandosDaperCliente.getComands();
+        listaErrores = (new ComandoValidarDaperCliente(dataPersonCliente.getDaperClienteEntity()).getCommands());
 
-        ComandosLoginCliente comandosLogin = new ComandosLoginCliente(dataLoginCliente.getLoginClienteEntity());
-        listaErrores.addAll(comandosLogin.getCommands());
+        listaErrores.addAll(new ComandoValidarLoginCliente(dataPersonCliente.getLoginClienteEntity()).getCommands());
+
 
         String mensaje = "";
 
@@ -75,43 +62,15 @@ public class ValidarClientInsertController extends HttpServlet {
 
         if(mensaje.equals("")) {
 
-            ClienteRoll clienteRoll = new ClienteRoll();
-
-            CPDAO cpdao = new CPDAO(clienteRoll.getUsuario(), clienteRoll.getPass());
-// Mejorarlo
-            try {
-                if (!cpdao.check_cp(dataPersonCliente.getCodigoPostalCliente())) {
-
-                    request.setAttribute("mensaje", "Codigo Postal Inexistente");
-
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
 
             clientFotoLoad(request, response);
 
             dataPersonCliente.setImagenCliente(dataPersonCliente.getNifCliente() + ".png");
 
- // Mejorarlo trasvase de una entidad a otra
-             ClienteEntity clienteEntity = new ClienteEntity();
-            clienteEntity.setNifCliente(dataPersonCliente.getNifCliente());
-            clienteEntity.setApellidosCliente(dataPersonCliente.getApellidosCliente());
-            clienteEntity.setNombreCliente(dataPersonCliente.getNombreCliente());
-            clienteEntity.setDomicilioCliente(dataPersonCliente.getDomicilioCliente());
-            clienteEntity.setCodigoPostalCliente(dataPersonCliente.getCodigoPostalCliente());
-            clienteEntity.setFechaNacimiento(dataPersonCliente.getFechaNacimiento().toString());
-            clienteEntity.setTelefonoCliente(dataPersonCliente.getTelefonoCliente());
-            clienteEntity.setMovilCliente(dataPersonCliente.getMovilCliente());
-            clienteEntity.setSexoCliente(dataPersonCliente.getSexoCliente());
-            clienteEntity.setEmailCliente(dataPersonCliente.getEmailCliente());
-            clienteEntity.setImagenCliente(dataPersonCliente.getImagenCliente());
-            clienteEntity.setUsuarioCliente(dataLoginCliente.getUsuarioCliente());
-            clienteEntity.setPasswordCliente(dataLoginCliente.getPasswordCliente());
 
             ClienteDAO clienteDAO = new ClienteDAO();
 
-            if (clienteDAO.add_cliente_procedure(clienteEntity)) {
+            if (clienteDAO.add_cliente_procedure(dataPersonCliente)) {
                 request.setAttribute("mensaje", "Cliente add");
                 rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
             } else request.setAttribute("mensaje", "Cliente NO add");

@@ -1,6 +1,6 @@
 package error;
 
-import cliente.DataBundleCliente;
+import cliente.DataLoginCliente;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -13,5 +13,5 @@ public abstract class ErrorManagerState {
         this.estadoError = estadoError;
     }
 
-    public abstract void consecuencia(DataBundleCliente dataBundleCliente, HttpServletResponse response) throws IOException;
+    public abstract void consecuencia(DataLoginCliente dataBundleCliente, HttpServletResponse response) throws IOException;
 }

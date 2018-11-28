@@ -1,12 +1,13 @@
 package cliente;
 
 import entity.DaperClienteEntity;
+import reflexion.RequestTransferSession;
 import reflexion.SessionTransferObject;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 
-public class DataPersonCliente extends DataBundleCliente {
+public class DataPersonCliente extends DataLoginCliente {
 
     private DaperClienteEntity daperClienteEntity = new DaperClienteEntity();
 

@@ -3,7 +3,7 @@ package controller;
 import cliente.DataLoginCliente;
 import dao.clienteDAO.ClienteDAO;
 import error.EstadoError;
-import cliente.ComandosLoginCliente;
+import cliente.ComandoValidarLoginCliente;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -30,15 +30,16 @@ public class UpdateClientLoginController extends HttpServlet {
 
         response.setContentType("text/html");
 
-        DataLoginCliente dataSessionCliente = null;
+        DataLoginCliente dataLoginCliente = null;
 
         try {
-            dataSessionCliente = new DataLoginCliente(request);
+            dataLoginCliente = new DataLoginCliente(request);
 
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        ComandosLoginCliente comandosLogin = new ComandosLoginCliente(dataSessionCliente.getLoginClienteEntity());
+
+        ComandoValidarLoginCliente comandosLogin = new ComandoValidarLoginCliente(dataLoginCliente.getLoginClienteEntity());
 
         ArrayList<Integer> listaErrores = new ArrayList<Integer>();
 
@@ -56,10 +57,10 @@ public class UpdateClientLoginController extends HttpServlet {
         if(mensaje.equals("")) {
             ClienteDAO clienteDAO = new ClienteDAO();
 
-            dataSessionCliente.setUsuarioCliente((String) session.getAttribute("nifClient"));
+            dataLoginCliente.setUsuarioCliente((String) session.getAttribute("nifClient"));
 
             try {
-                if( clienteDAO.update_client_login(dataSessionCliente.getLoginClienteEntity())) request.setAttribute("mensaje", "Login Modificado ");
+                if( clienteDAO.update_client_login(dataLoginCliente.getLoginClienteEntity())) request.setAttribute("mensaje", "Login Modificado ");
                 else request.setAttribute("mensaje", "Login NO se ha podido modificar");
             } catch (SQLException e) {
                 e.printStackTrace();

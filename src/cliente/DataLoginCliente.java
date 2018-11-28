@@ -1,15 +1,26 @@
 package cliente;
 
+import reflexion.RequestTransferSession;
+import reflexion.SessionTransferObject;
 import entity.LoginClienteHarnina;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.InvocationTargetException;
 
-public class DataLoginCliente extends DataBundleCliente {
+public  class DataLoginCliente {
+
+    LoginClienteHarnina loginClienteEntity = new LoginClienteHarnina();
+    HttpSession session;
 
 
     public DataLoginCliente(HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
-        super(request);
+
+        session = request.getSession();
+
+        new RequestTransferSession().guardarDatosSesion(request,session);
+
+        new SessionTransferObject(session,loginClienteEntity);
     }
 
     public LoginClienteHarnina getLoginClienteEntity() {

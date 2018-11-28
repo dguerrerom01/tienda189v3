@@ -1,6 +1,8 @@
 package dao.clienteDAO;
 
+import cliente.DataPersonCliente;
 import entity.ClienteEntity;
+import entity.DaperClienteEntity;
 import entity.LoginClienteHarnina;
 
 import java.sql.SQLException;
@@ -36,9 +38,9 @@ public class ClienteDAO {
         }
     }
 
-  public boolean add_cliente_procedure (ClienteEntity clientEntity) {
+  public boolean add_cliente_procedure (DataPersonCliente dataPersonCliente) {
         try {
-            return clienteRoll.add_cliente(clientEntity);
+            return clienteRoll.add_cliente(dataPersonCliente);
         } catch (SQLException e) {
             System.out.println("DAO false");
             return false;
@@ -63,6 +65,10 @@ public class ClienteDAO {
        return clienteRoll.getListaClientes();
     }
 
+  public DaperClienteEntity getCliente(String nif){
+        return (DaperClienteEntity) clienteRoll.getCliente(nif);
+    }
+
   public Boolean deleteClient(String nif) throws SQLException {
       return clienteRoll.deleteClient(nif);
   }
@@ -71,4 +77,8 @@ public class ClienteDAO {
       return clienteRoll.update_client_login(cliente);
   }
 
+  public boolean update_client_daper(DaperClienteEntity cliente, String usuario) throws SQLException {
+
+      return clienteRoll.update_client_daper(cliente,usuario);
+    }
 }

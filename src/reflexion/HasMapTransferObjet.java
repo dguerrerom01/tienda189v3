@@ -28,10 +28,10 @@ public class HasMapTransferObjet {
 
                     System.out.println("metodo: " + metodosDeclarados[i].getName() + "\t|atributo: " + atributos[j].getName() + "\t|dato: " + datosFila.get(atributos[j].getName().toString()));//datosFila.get(atributos[j].getName().toString()));  //.toString()));
                     try {
-                        metodosDeclarados[i].invoke(genericObject, datosFila.get(atributos[j].getName())); //.toString()));
+                        metodosDeclarados[i].invoke(genericObject, datosFila.get(atributos[j].getName().toLowerCase())); //.toString()));
                     }catch (IllegalArgumentException e){
                         SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy");
-                        String dateFormat = simpleFormat.format(datosFila.get(atributos[j].getName()));
+                        String dateFormat = simpleFormat.format(datosFila.get(atributos[j].getName().toLowerCase()));
                         metodosDeclarados[i].invoke(genericObject,dateFormat);
                     }
 

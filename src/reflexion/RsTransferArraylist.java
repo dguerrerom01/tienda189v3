@@ -22,8 +22,9 @@ public class RsTransferArraylist {
 
             for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
 
-               datosFila.put(rs.getMetaData().getColumnName(i).toString(),rs.getString(i)); // rs.getString(i)); // rs.getObject(i));
+               datosFila.put(rs.getMetaData().getColumnName(i).toLowerCase(),rs.getString(i)); // rs.getString(i)); // rs.getObject(i));
             }
+            filas.add(new HasMapTransferObjet().crearPojo(datosFila, clase));
         }
         return filas;
     }

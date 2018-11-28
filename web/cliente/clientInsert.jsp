@@ -53,7 +53,7 @@
 
             <div id="div_clientFirstName">
                 <label class="labelInput" for="clientFirstName">Nombre:</label>
-                <input class="etiqueta s8" id="clientFirstName" name ="nombreCliente" value="<%= (session.getAttribute("nombreCliente")!= "null")? session.getAttribute("clientFirstName"): "" %>" type="text" data-functioncallback="ValidacionExpresionRegular.validarLetrasConEspacio" size="24" minlength="3" maxlength="80" required placeholder="input your FirstName" title="3 to 50 characters">
+                <input class="etiqueta s8" id="clientFirstName" name ="nombreCliente" value="<%=session.getAttribute("nombreCliente")%>" type="text" data-functioncallback="ValidacionExpresionRegular.validarLetrasConEspacio" size="24" minlength="3" maxlength="80" required placeholder="input your FirstName" title="3 to 50 characters">
             </div>
 
             <div id="div_clientLastName">
@@ -135,4 +135,4 @@
 <script src="../js/jsStore/error.js"></script>
 <script src="../js/jsStore/submit.js"></script>
 <script src="../js/jsStore/validate.js"></script>
-<script src="../js/jsStore/cliente.js"></script>
+<script src="../js/jsStore/clienteStrategyOne.js"></script>

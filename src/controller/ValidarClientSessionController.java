@@ -2,7 +2,9 @@ package controller;
 
 import cliente.DataLoginCliente;
 import dao.clienteDAO.ClienteDAO;
+import entity.DaperClienteEntity;
 import error.EstadoError;
+import reflexion.ObjectTransferSession;
 import validate.ValidacionPassword;
 import validate.ValidacionUsuario;
 
@@ -36,10 +38,10 @@ public class ValidarClientSessionController extends HttpServlet {
 
         RequestDispatcher rd = request.getRequestDispatcher("cliente/clientSesion.jsp");
 
-        DataLoginCliente dataSessionCliente = null;
+        DataLoginCliente dataLoginCliente = null;
 
         try {
-            dataSessionCliente = new DataLoginCliente(request);
+            dataLoginCliente = new DataLoginCliente(request);
 
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
@@ -47,8 +49,8 @@ public class ValidarClientSessionController extends HttpServlet {
 
         ArrayList<Integer> listaErrores = new ArrayList<Integer>();
 
-        listaErrores.add(new ValidacionUsuario(dataSessionCliente.getUsuarioCliente()).exec());
-        listaErrores.add(new ValidacionPassword(dataSessionCliente.getPasswordCliente()).exec());
+        listaErrores.add(new ValidacionUsuario(dataLoginCliente.getUsuarioCliente()).exec());
+        listaErrores.add(new ValidacionPassword(dataLoginCliente.getPasswordCliente()).exec());
 
         String mensaje = "";
 
@@ -63,7 +65,7 @@ public class ValidarClientSessionController extends HttpServlet {
 
              ClienteDAO clienteDAO = new ClienteDAO();
 
-             String nifLogin = clienteDAO.get_nif_login(dataSessionCliente.getLoginClienteEntity());
+             String nifLogin = clienteDAO.get_nif_login(dataLoginCliente.getLoginClienteEntity());
 
              session.setAttribute("nifClient", nifLogin);
 
@@ -72,6 +74,18 @@ public class ValidarClientSessionController extends HttpServlet {
                  request.setAttribute("mensaje", ("Hola ").concat(nifLogin));
 
                  String opcion = request.getParameter("opcion");
+
+                 if (opcion.equals("clientUpdateDaper")){
+
+                    try {
+                         new ObjectTransferSession().convertir(session,clienteDAO.getCliente(nifLogin));
+                     } catch (InvocationTargetException e) {
+                         e.printStackTrace();
+                     } catch (IllegalAccessException e) {
+                         e.printStackTrace();
+                     }
+
+                 }
 
                  rd = request.getRequestDispatcher("cliente/" + opcion + ".jsp");
 

@@ -1,6 +1,8 @@
 package dao.clienteDAO;
 
+import cliente.DataPersonCliente;
 import dao.AccesoDB;
+import entity.DaperClienteEntity;
 import reflexion.RsTransferArraylist;
 import entity.ClienteEntity;
 import entity.LoginClienteHarnina;
@@ -61,7 +63,7 @@ public class ClienteRoll {
 
     // Uso de procedures
 
-        public boolean  add_cliente(ClienteEntity cliente) throws SQLException {
+        public boolean  add_cliente(DataPersonCliente cliente) throws SQLException {
         this.conectar();
         CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call add_cliente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
         cstmt.setString(1,cliente.getNifCliente());
@@ -123,13 +125,13 @@ public class ClienteRoll {
         return null;
     }
 
-        public Object getCliente(String dni) {
+        public DaperClienteEntity getCliente(String dni) {
         this.conectar();
-        String clase = ClienteEntity.class.getName();
+        String clase = DaperClienteEntity.class.getName();
         try {
             CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call get_daper_cliente(?)}");
             cstmt.setString(1, dni);
-            return new RsTransferArraylist().getGenericObject(cstmt, clase);
+            return (DaperClienteEntity) new RsTransferArraylist().getGenericObject(cstmt, clase);
         } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException | InvocationTargetException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -170,4 +172,27 @@ public class ClienteRoll {
         cstmt.execute();
         return  cstmt.getBoolean(4);
     }
+
+        public boolean update_client_daper (DaperClienteEntity cliente, String usuario) throws SQLException {
+            this.conectar();
+            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call update_client_daper( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            cstmt.setString(1,usuario);
+            System.out.println("usuarioCliente ROLL:"+ usuario);
+            cstmt.setString(2,cliente.getNifCliente());
+            cstmt.setString(3,cliente.getApellidosCliente());
+            cstmt.setString(4,cliente.getNombreCliente());
+            cstmt.setString(5,cliente.getCodigoPostalCliente());
+            cstmt.setString(6,cliente.getDomicilioCliente());
+            System.out.println("domicilioCliente ROLL:"+ cliente.getDomicilioCliente());
+            cstmt.setString(7,cliente.getFechaNacimiento());
+
+            cstmt.setString(8,cliente.getTelefonoCliente());
+            cstmt.setString(9,cliente.getMovilCliente());
+            cstmt.setString(10,cliente.getSexoCliente());
+            cstmt.setString(11,cliente.getEmailCliente());
+            cstmt.registerOutParameter(12, Types.BOOLEAN);
+            cstmt.execute();
+            return  cstmt.getBoolean(12);
+        }
+
     }
