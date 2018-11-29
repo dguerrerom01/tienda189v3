@@ -96,15 +96,6 @@
                 <input class="etiqueta s8" id="emailCliente" name="emailCliente"  value="<%= session.getAttribute("emailCliente") %>"  type="email" data-functioncallback="ValidacionExpresionRegular.validarEmail" required placeholder="input your Email" title="Email">
             </div>
 
-<!--
-            <div class="fileinputs etiqueta s8" id="div_clientImage">
-                <input class="etiqueta s8 file" id="clientImage" type="file" name="imagenCliente" data-functioncallback="ValidarFicheroName.validarImagenName" required accept="image/png, image/jpeg" placeholder="input your Avatar" title="3 to 120 characters">
-                <div class="fakefile">
-                    <label class="labelInput" for="idFile">Elije tu foto</label>
-                    <input id="idFile" name="myFile"  value="<%= session.getAttribute("imagenCliente") %>" >
-                </div>
-            </div> -->
-
             <div class="etiqueta errorColor" id="alertaError">Error:</div>
             <button id="submit" type="submit">Enviar</button>
         </div>

@@ -1,6 +1,6 @@
 STORE.namespace('STORE.list_input');
 
-(window.onload,function(g){
+(function(g){
     'use strict';
 
     var form = $("client_register");
@@ -9,14 +9,14 @@ STORE.namespace('STORE.list_input');
 
     eval("div_" + STORE.list_input[0].id).style.display = '';
 
-    alert("(STORE.list_input[0].id).value",(STORE.list_input[0].id).value);
-    if((STORE.list_input[0].id).value == null) {
+   // alert("(STORE.list_input[0].id).value",(STORE.list_input[0].id).value);
+   // if((STORE.list_input[0].id).value == null) {
 
         for (var i = 1; i < STORE.list_input.length; i++) {
 
             eval("div_" + STORE.list_input[i].id).style.display = 'none';
         }
-    }
+   // }
     STORE.Error.off();
 
     STORE.Submit.off();

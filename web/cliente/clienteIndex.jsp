@@ -41,6 +41,7 @@
     <div class="contenido01">
         <div><a href="cliente/clientSesion.jsp?opcion=clientUpdateLogin&operacion=Confirmar">Modificar Login </a></div>
         <div><a href="cliente/clientSesion.jsp?opcion=clientUpdateDaper&operacion=Confirmar">Modificar Datos Personales</a></div>
+        <div><a href="cliente/clientSesion.jsp?opcion=clientUpdateAvatar&operacion=Confirmar">Modificar Avatar</a></div>
         <div><a href="cliente/clientSesion.jsp?opcion=clientDelete&operacion=Confirmar">Eliminar </a></div>
     </div>
 
@@ -49,5 +50,8 @@
 </body>
 </html>
 
+<script language="javascript">
+    var nif = <%=session.getAttribute("nifCliente") %>
+</script>
 <script src="../js/jscss/dado.js"></script>
 <script src="../js/jsStore/store.js"></script>

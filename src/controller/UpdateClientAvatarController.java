@@ -1,10 +1,5 @@
 package controller;
 
-import cliente.*;
-import dao.clienteDAO.ClienteDAO;
-
-import error.EstadoError;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -12,17 +7,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
-@WebServlet("/valiCliIn")
+@WebServlet("/UpCliAvaCon")
 @MultipartConfig
-public class ValidarClientInsertController extends HttpServlet {
-
+public class UpdateClientAvatarController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     HttpSession session;
-
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -32,56 +23,16 @@ public class ValidarClientInsertController extends HttpServlet {
 
         response.setContentType("text/html");
 
-        RequestDispatcher rd = request.getRequestDispatcher("cliente/clientInsert.jsp");
+        clientFotoLoad(request, response);
 
-        DataPersonCliente dataPersonCliente = null;
-        try {
-            dataPersonCliente = new DataPersonCliente(request);
+        RequestDispatcher rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
+        rd.forward(request, response);
 
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<Integer> listaErrores = new ArrayList<Integer>();
-
-        listaErrores = (new ComandoValidarDaperCliente(dataPersonCliente.getDaperClienteEntity()).getCommands());
-
-        listaErrores.addAll(new ComandoValidarLoginCliente(dataPersonCliente.getLoginClienteEntity()).getCommands());
-
-
-        String mensaje = "";
-
-        for(Integer error:listaErrores){
-            for (EstadoError estado : EstadoError.values()){
-                if(error == estado.getId() & error != 0) mensaje = mensaje.concat(estado.getMsg());
-            }
-        }
-        request.setAttribute("mensaje", mensaje);
-
-        if(mensaje.equals("")) {
-
-
-            clientFotoLoad(request, response);
-
-            dataPersonCliente.setImagenCliente(dataPersonCliente.getNifCliente() + ".png");
-
-
-            ClienteDAO clienteDAO = new ClienteDAO();
-
-            if (clienteDAO.add_cliente_procedure(dataPersonCliente)) {
-                request.setAttribute("mensaje", "Cliente add");
-                rd = request.getRequestDispatcher("cliente/clienteIndex.jsp");
-            } else request.setAttribute("mensaje", "Cliente NO add");
-
-        }
-
-       rd.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
-
 
     private String getFileName(Part part) {
         for (String cd : part.getHeader("content-disposition").split(";")) {
@@ -97,7 +48,8 @@ public class ValidarClientInsertController extends HttpServlet {
 
         Part filePart = request.getPart("imagenCliente");
         String fileName = getFileName(filePart);
-        String dniCliente = request.getParameter("nifCliente");
+       // String dniCliente = request.getParameter("nifCliente");
+        String dniCliente = (String) session.getAttribute("nifCliente");
 
         if (fileName.length() > 2) {
 
@@ -126,7 +78,6 @@ public class ValidarClientInsertController extends HttpServlet {
             bufIN.close();
         }
     }
-
 
 }
 
