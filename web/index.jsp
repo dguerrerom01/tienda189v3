@@ -6,6 +6,16 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    if(session.getAttribute("idSesion") != session.getId())
+    {
+        session.setAttribute("idSesion", session.getId());
+        session.setAttribute("intento",0);
+        session.setAttribute("maxIntento",3);
+        session.setAttribute("tiempoMaximoBloqueo", 100);
+    }
+
+%>
 <html>
 
   <head>
@@ -18,7 +28,7 @@
   </head>
   <body>
   <header class="cabecera"><a class="subtitulo" href="catalogo.html">DAM: ACCESO A DATOS</a>
-    <h5 class="titulo">Tienda Harnina</h5>
+    <h5 class="titulo">Tienda Harnina<%=session.getAttribute("idSesion") %></h5>
   </header>
   <div class="contenido01">
     <div class="medio dadoCatalogo">

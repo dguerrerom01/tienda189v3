@@ -50,5 +50,8 @@
 </body>
 </html>
 
+<script language="javascript">
+    var nif = "<%=session.getAttribute("nifCliente") %>";
+</script>
 <script src="../js/jscss/dado.js"></script>
 <script src="../js/jsStore/store.js"></script>

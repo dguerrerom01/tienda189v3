@@ -18,10 +18,11 @@ var creaCara = function(dado, n, imagen){
   }
 }
 
+var nif;
 for (var i = 0; i <= dados.length; i++) {
   var dado = document.getElementsByClassName(dados[i]);
   for (var j = 0; j < dado.length; j++){
-    creaCara(dado, j, imagenes[i]);
+    creaCara(dado, j, nif === undefined ? imagenes[i] : "../img/fotoClient/" + nif + ".png");
   }
-
 }
+nif = null;

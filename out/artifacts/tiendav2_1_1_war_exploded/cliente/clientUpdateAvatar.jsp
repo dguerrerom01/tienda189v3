@@ -31,7 +31,7 @@
 
     <div class="contenido01">
 
-       <img src= "../img/fotoClient/<%=session.getAttribute("nifCliente")%>.png" alt="" height="200px" width="300px"> 
+       <img src= "../img/fotoClient/<%=session.getAttribute("nifCliente")%>.png" alt="" height="200px" width="300px">
 
     </div>
 
@@ -61,7 +61,6 @@
 
 <script src="../js/jscss/dado.js"></script>
 <script src="../js/jsStore/store.js"></script>
-
 <script src="../js/jsStore/color.js"></script>
 <script src="../js/jsStore/lista.js"></script>
 <script src="../js/jsStore/file.js"></script>
