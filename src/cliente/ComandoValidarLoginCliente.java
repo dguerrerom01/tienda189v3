@@ -1,10 +1,12 @@
 package cliente;
 
 import entity.LoginClienteHarnina;
+import error.Error;
 import validate.ValidacionPassword;
 import validate.ValidacionUsuario;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ComandoValidarLoginCliente implements ComandoValidarCliente {
 
@@ -13,14 +15,15 @@ public class ComandoValidarLoginCliente implements ComandoValidarCliente {
    public ComandoValidarLoginCliente(LoginClienteHarnina loginClienteHarnina){
       this.loginClienteHarnina = loginClienteHarnina;
    }
-    public  ArrayList<Integer> getCommands(){
+    public  ArrayList<Error> getCommands(){
 
-        ArrayList<Integer> listaErrores = new ArrayList<Integer>();
+        ArrayList<Error> errors = new ArrayList<>();
 
-        listaErrores.add(new ValidacionUsuario(loginClienteHarnina.getUsuarioCliente()).exec());
-        listaErrores.add(new ValidacionPassword(loginClienteHarnina.getPasswordCliente()).exec());
+        errors.add(new ValidacionUsuario(loginClienteHarnina.getUsuarioCliente()).exec());
+        errors.add(new ValidacionPassword(loginClienteHarnina.getPasswordCliente()).exec());
+        errors.removeIf(Objects::isNull);
 
-        return listaErrores;
+        return errors;
 
     }
 

@@ -2,7 +2,7 @@ package validate;
 
 import dao.clienteDAO.ClienteRoll;
 import dao.cp.CPDAO;
-import error.EstadoError;
+import error.Error;
 
 import java.sql.SQLException;
 
@@ -15,7 +15,7 @@ public class VerificacionCodigoPostal implements  IValidacion {
     }
 
     @Override
-    public int exec() {
+    public Error exec() {
 
         ClienteRoll clienteRoll = new ClienteRoll();
 
@@ -24,13 +24,13 @@ public class VerificacionCodigoPostal implements  IValidacion {
         try {
             if (!cpdao.check_cp(value)) {
 
-                return EstadoError.ERROR_CODIGOPOSTAL_INCORRECTO.getId();
+                return Error.ERROR_CODIGOPOSTAL_INCORRECTO;
 
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return EstadoError.ERROR_NULL.getId();
+        return Error.ERROR_NULL;
     }
 }

@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 public class ValidacionUsuario extends ValidacionRegularExpression implements IValidacion {
 
@@ -21,9 +21,12 @@ public class ValidacionUsuario extends ValidacionRegularExpression implements IV
 
     }
     @Override
-    public int exec(){
-        if (super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
-         else return  EstadoError.ERROR_USUARIO_BAD.getId();
+    public Error exec(){
+        if (!super.validar(value,patron)){
+            return  Error.ERROR_USUARIO_BAD;
+        }
+
+        return null;
     }
 
 

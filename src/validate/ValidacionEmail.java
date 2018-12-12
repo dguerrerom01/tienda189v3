@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 public class ValidacionEmail extends ValidacionRegularExpression implements IValidacion {
 
@@ -8,15 +8,16 @@ public class ValidacionEmail extends ValidacionRegularExpression implements IVal
 
     private String value;
 
-    public ValidacionEmail(String value){
-
+    public ValidacionEmail(String value) {
         this.value = value;
-
     }
-    @Override
-    public int exec(){
-        if (super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
 
-            else return EstadoError.ERROR_EMAIL_BAD.getId();
+    @Override
+    public Error exec() {
+        if (!super.validar(value, patron)) {
+            return Error.ERROR_EMAIL_BAD;
+        }
+
+        return null;
     }
 }

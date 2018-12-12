@@ -2,7 +2,7 @@ package validate;
 
 
 
-import error.EstadoError;
+import error.Error;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ public class ValidacionImagenNombre extends ValidacionMultiValidation implements
     }
 
 
-    public ArrayList<Integer> exec(){
+    public ArrayList<Error> exec(){
 
         assertTrue(value.contains("."));
 
@@ -28,6 +28,6 @@ public class ValidacionImagenNombre extends ValidacionMultiValidation implements
 
         IValidacion [] validadores = {new ValidacionExtensionFile(extension,this.lista) ,new ValidacionLetrasSinEspacio(nombreImagen)};
 
-        return   super.validar(validadores);
+        return super.validar(validadores);
     }
 }

@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 //X1234567L
 public class ValidacionNIE implements IValidacion{
@@ -14,7 +14,7 @@ public class ValidacionNIE implements IValidacion{
     }
 
     @Override
-    public int exec() {
+    public Error exec() {
 
         boolean esValido = false;
         int i = 1;
@@ -50,8 +50,8 @@ public class ValidacionNIE implements IValidacion{
             esValido = (letra == asignacionLetra[resto]);
         }
 
-        if(esValido) return EstadoError.ERROR_NULL.getId();
-            else return EstadoError.ERROR_NIE_BAD.getId();
+        if(esValido) return null;
+            else return Error.ERROR_NIE_BAD;
     }
 
 }

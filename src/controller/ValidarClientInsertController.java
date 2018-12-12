@@ -3,7 +3,7 @@ package controller;
 import cliente.*;
 import dao.clienteDAO.ClienteDAO;
 
-import error.EstadoError;
+import error.Error;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 @WebServlet("/valiCliIn")
@@ -42,30 +41,14 @@ public class ValidarClientInsertController extends HttpServlet {
             e.printStackTrace();
         }
 
-        ArrayList<Integer> listaErrores = new ArrayList<Integer>();
+        ArrayList<Error> errors = new ArrayList<>();
 
-        listaErrores = (new ComandoValidarDaperCliente(dataPersonCliente.getDaperClienteEntity()).getCommands());
+        errors = (new ComandoValidarDaperCliente(dataPersonCliente.getDaperClienteEntity()).getCommands());
+        errors.addAll(new ComandoValidarLoginCliente(dataPersonCliente.getLoginClienteEntity()).getCommands());
 
-        listaErrores.addAll(new ComandoValidarLoginCliente(dataPersonCliente.getLoginClienteEntity()).getCommands());
-
-
-        String mensaje = "";
-
-        for(Integer error:listaErrores){
-            for (EstadoError estado : EstadoError.values()){
-                if(error == estado.getId() & error != 0) mensaje = mensaje.concat(estado.getMsg());
-            }
-        }
-        request.setAttribute("mensaje", mensaje);
-
-        if(mensaje.equals("")) {
-
-
+        if(errors.isEmpty()) {
             clientFotoLoad(request, response);
-
             dataPersonCliente.setImagenCliente(dataPersonCliente.getNifCliente() + ".png");
-
-
             ClienteDAO clienteDAO = new ClienteDAO();
 
             if (clienteDAO.add_cliente_procedure(dataPersonCliente)) {

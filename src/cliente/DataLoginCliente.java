@@ -70,10 +70,9 @@ public  class DataLoginCliente {
         return (Integer) session.getAttribute("intento");
     }
 
-    private void incrementarIntento() {
-        int intento = this.getIntento();
-        intento++;
-        this.setIntento(intento);
+    public void incrementarIntento() {
+
+        this.setIntento( this.getIntento() + 1);
     }
 
     private int getMaxIntento() {
@@ -81,10 +80,8 @@ public  class DataLoginCliente {
         return (Integer) session.getAttribute("maxIntento");
     }
 
-    public boolean  masIntento(){
-        incrementarIntento();
-        if(getIntento() >= getMaxIntento()) return false;
-        return true;
+    public boolean  disponibilidadIntento(){
+        return (getIntento() < getMaxIntento());
     }
 
 }

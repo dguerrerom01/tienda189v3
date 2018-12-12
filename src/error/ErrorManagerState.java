@@ -7,10 +7,10 @@ import java.io.IOException;
 
 public abstract class ErrorManagerState {
 
-    protected EstadoError estadoError;
+    protected Error error;
 
-    void setEstado(EstadoError estadoError) {
-        this.estadoError = estadoError;
+    void setEstado(Error error) {
+        this.error = error;
     }
 
     public abstract void consecuencia(DataLoginCliente dataBundleCliente, HttpServletResponse response) throws IOException;

@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 public class ValidacionTelefonoSpain extends ValidacionRegularExpression implements IValidacion {
     private static final String patron = "^(\\+34|0034|34)?[6789]\\d{8}$";//"^(\+34|0034|34)?[6789]\d{8}$";
@@ -14,9 +14,9 @@ public class ValidacionTelefonoSpain extends ValidacionRegularExpression impleme
 
     }
     @Override
-    public int exec(){
-        if( super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
-          else return EstadoError.ERROR_PHONE_BAD.getId();
+    public Error exec(){
+        if( super.validar(value,patron)) return null;
+          else return Error.ERROR_PHONE_BAD;
     }
 
 

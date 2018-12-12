@@ -2,11 +2,9 @@ package controller;
 
 
 import cliente.ComandoValidarDaperCliente;
-import cliente.ComandoValidarLoginCliente;
-import cliente.DataLoginCliente;
 import cliente.DataPersonCliente;
 import dao.clienteDAO.ClienteDAO;
-import error.EstadoError;
+import error.Error;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,21 +41,9 @@ public class UpdateClientDaperController extends HttpServlet {
         }
 
         ComandoValidarDaperCliente  comandosDaper = new ComandoValidarDaperCliente(dataPersonCliente.getDaperClienteEntity());
+        ArrayList<Error> errors = comandosDaper.getCommands();
 
-        ArrayList<Integer> listaErrores = new ArrayList<Integer>();
-
-        listaErrores = comandosDaper.getCommands();
-
-        String mensaje = "";
-
-        for(Integer error:listaErrores){
-            for (EstadoError estado : EstadoError.values()){
-                if(error == estado.getId() & error != 0) mensaje = mensaje.concat(estado.getMsg());
-            }
-        }
-        request.setAttribute("mensaje", mensaje);
-
-        if(mensaje.equals("")) {
+        if(errors.isEmpty()) {
 
             ClienteDAO clienteDAO = new ClienteDAO();
             try {

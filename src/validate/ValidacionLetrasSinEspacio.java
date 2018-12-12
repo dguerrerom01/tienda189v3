@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 public class ValidacionLetrasSinEspacio extends ValidacionRegularExpression implements IValidacion {
 
@@ -13,10 +13,10 @@ public class ValidacionLetrasSinEspacio extends ValidacionRegularExpression impl
     }
 
     @Override
-    public int exec() {
+    public Error exec() {
 
-        if(super.validar(value, patron)) return EstadoError.ERROR_NULL.getId();
-            else return EstadoError.ERROR_LETTER_ONLY.getId();
+        if(super.validar(value, patron)) return null;
+            else return Error.ERROR_LETTER_ONLY;
     }
 
 

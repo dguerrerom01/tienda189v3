@@ -2,7 +2,7 @@ package controller;
 
 import cliente.DataLoginCliente;
 import dao.clienteDAO.ClienteDAO;
-import error.EstadoError;
+import error.Error;
 import cliente.ComandoValidarLoginCliente;
 
 import javax.servlet.RequestDispatcher;
@@ -40,21 +40,9 @@ public class UpdateClientLoginController extends HttpServlet {
         }
 
         ComandoValidarLoginCliente comandosLogin = new ComandoValidarLoginCliente(dataLoginCliente.getLoginClienteEntity());
+        ArrayList<Error> errors = comandosLogin.getCommands();
 
-        ArrayList<Integer> listaErrores = new ArrayList<Integer>();
-
-        listaErrores = comandosLogin.getCommands();
-
-        String mensaje = "";
-
-        for(Integer error:listaErrores){
-            for (EstadoError estado : EstadoError.values()){
-                if(error == estado.getId() & error != 0) mensaje = mensaje.concat(estado.getMsg());
-            }
-        }
-        request.setAttribute("mensaje", mensaje);
-
-        if(mensaje.equals("")) {
+        if(errors.isEmpty()) {
             ClienteDAO clienteDAO = new ClienteDAO();
 
             dataLoginCliente.setUsuarioCliente((String) session.getAttribute("nifClient"));

@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 public class ValidacionFecha extends ValidacionRegularExpression implements IValidacion {
 
@@ -14,11 +14,11 @@ public class ValidacionFecha extends ValidacionRegularExpression implements IVal
 
     }
     @Override
-    public int exec(){
+    public Error exec(){
 
-        if(super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
+        if(super.validar(value,patron)) return null;
 
-            else return EstadoError.ERROR_FECHA_BAD.getId();
+            else return Error.ERROR_FECHA_BAD;
     }
 
 

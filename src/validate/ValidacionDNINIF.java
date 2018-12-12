@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 public class ValidacionDNINIF implements IValidacion{
 
@@ -10,7 +10,7 @@ public class ValidacionDNINIF implements IValidacion{
         this.dni = dni;
     }
     @Override
-    public int exec() {
+    public Error exec() {
 
         String letraMayuscula = (this.dni.substring(8)).toUpperCase();
 
@@ -18,14 +18,14 @@ public class ValidacionDNINIF implements IValidacion{
 
         if(dni.length() != 9 || Character.isLetter(this.dni.charAt(8)) == false ) {
 
-            return EstadoError.ERROR_NIF_LENGTH.getId();
+            return Error.ERROR_NIF_LENGTH;
         }
 
         if(soloNumeros(losNumeros) == true && getLetraDNI().equals(letraMayuscula)) {
 
-            return EstadoError.ERROR_NULL.getId();
+            return null;
         }
-       return EstadoError.ERROR_NIF_8DIGIT_LETTER.getId();
+       return Error.ERROR_NIF_8DIGIT_LETTER;
     }
 
 

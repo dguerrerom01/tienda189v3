@@ -1,6 +1,6 @@
 package error;
 
-public enum  EstadoError {
+public enum Error {
 
     ERROR_NULL(0,"No hay Error","Lorem Ipsum...", "NoError"),
     ERROR_MISSING(25,"Error Desconocido","","ErrorMissing"),
@@ -29,7 +29,7 @@ public enum  EstadoError {
     private final String descrip;
     private final String className;
 
-    EstadoError(int id, String msg, String descrip, String className) {
+    Error(int id, String msg, String descrip, String className) {
         this.id = id;
         this.msg = msg;
         this.descrip = descrip;

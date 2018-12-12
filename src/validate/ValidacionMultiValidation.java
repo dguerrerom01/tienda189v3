@@ -1,5 +1,7 @@
 package validate;
 
+import error.Error;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +9,9 @@ public class ValidacionMultiValidation {
 
     private String error;
 
-    ArrayList<Integer> listaErrores = new ArrayList<Integer>();
+    ArrayList<Error> listaErrores = new ArrayList<>();
 
-    protected ArrayList<Integer> validar(IValidacion validadores[]) {
+    protected ArrayList<Error> validar(IValidacion validadores[]) {
 
         for (int i = 0; i < validadores.length; i++) {
 
@@ -18,16 +20,16 @@ public class ValidacionMultiValidation {
         }
         return listaErrores;
     }
-    public static ArrayList<Integer> validar(List<IValidacion> validador ) {
+    public static ArrayList<Error> validar(List<IValidacion> validador ) {
 
-        ArrayList<Integer> listaErro = new ArrayList<Integer>();
+        ArrayList<Error> errors = new ArrayList<>();
 
         for(IValidacion vali:validador){
 
-            listaErro.add(vali.exec());
+            errors.add(vali.exec());
 
         }
-        return listaErro;
+        return errors;
     }
     /*
     public static String validar(List<IValidacion> validador ) {

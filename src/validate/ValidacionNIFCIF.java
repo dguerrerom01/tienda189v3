@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 import java.util.regex.Pattern;
 
@@ -21,18 +21,18 @@ public class ValidacionNIFCIF implements IValidacion{
 
 
     @Override
-    public int exec() {
+    public Error exec() {
         try {
             if (!cifPattern.matcher(this.nif).matches()) {
                 // No cumple el patrón
-                return EstadoError.ERROR_NOPATTERN.getId();
+                return null;
             }
 
             int parA = 0;
             for (int i = 2; i < 8; i += 2) {
                 final int digito = Character.digit(this.nif.charAt(i), 10);
                 if (digito < 0) {
-                    return EstadoError.ERROR_NIF_8DIGIT_LETTER.getId();
+                    return Error.ERROR_NIF_8DIGIT_LETTER;
                 }
                 parA += digito;
             }
@@ -41,7 +41,7 @@ public class ValidacionNIFCIF implements IValidacion{
             for (int i = 1; i < 9; i += 2) {
                 final int digito = Character.digit(this.nif.charAt(i), 10);
                 if (digito < 0) {
-                    return EstadoError.ERROR_CIF_BAD.getId();
+                    return Error.ERROR_CIF_BAD;
                 }
                 int nn = 2 * digito;
                 if (nn > 9) {
@@ -62,11 +62,11 @@ public class ValidacionNIFCIF implements IValidacion{
                             ||
                             // ¿el caracter de control es válido como dígito?
                             (CONTROL_SOLO_LETRAS.indexOf(letraIni) < 0 && digitoD == Character.digit(caracterFin, 10));
-            if(esControlValido) return EstadoError.ERROR_NULL.getId();
-                    else return EstadoError.ERROR_CIF_BAD.getId();
+            if(esControlValido) return Error.ERROR_NULL;
+                    else return Error.ERROR_CIF_BAD;
 
         } catch (Exception e) {
-            return EstadoError.ERROR_MISSING.getId();
+            return Error.ERROR_MISSING;
         }
 
     }

@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 public class ValidacionLongitud implements IValidacion{
 
@@ -23,13 +23,13 @@ public class ValidacionLongitud implements IValidacion{
 
 
     @Override
-    public int exec() {
+    public Error exec() {
 
        if (this.minimo <= this.cadena.length() && this.cadena.length()<= this.maximo){
 
-           return EstadoError.ERROR_NULL.getId();
+           return null;
        }
-        return EstadoError.ERROR_INTERVALO.getId();
+        return Error.ERROR_INTERVALO;
     }
 
 

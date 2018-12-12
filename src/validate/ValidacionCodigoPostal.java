@@ -1,6 +1,6 @@
 package validate;
 
-import error.EstadoError;
+import error.Error;
 
 public class ValidacionCodigoPostal  extends ValidacionRegularExpression implements IValidacion {
 
@@ -14,9 +14,9 @@ public class ValidacionCodigoPostal  extends ValidacionRegularExpression impleme
 
     }
     @Override
-    public int exec(){
-        if(super.validar(value,patron)) return EstadoError.ERROR_NULL.getId();
-            else return EstadoError.ERROR_CODIGOPOSTAL_INCORRECTO.getId();
+    public Error exec(){
+        if(!super.validar(value,patron)) return Error.ERROR_CODIGOPOSTAL_INCORRECTO;
+       return null;
     }
 
 
