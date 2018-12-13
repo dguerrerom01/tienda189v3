@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -29,6 +30,9 @@ public class ValidarClientSessionController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         session = request.getSession();
+        String opcion = request.getParameter("opcion");
+
+        ClienteDAO clienteDAO = new ClienteDAO();
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
@@ -52,7 +56,6 @@ public class ValidarClientSessionController extends HttpServlet {
 // Comprobamos si No hay errores de validación
         if (listaErrores.isEmpty()) {
 // Buscamos al cliente
-            ClienteDAO clienteDAO = new ClienteDAO();
             String nifLogin = clienteDAO.get_nif_login(dataLoginCliente.getLoginClienteEntity());
 // Comprobamos si es un cliente
             if (!nifLogin.equals("null")) {
@@ -63,7 +66,7 @@ public class ValidarClientSessionController extends HttpServlet {
 
                 request.setAttribute("mensaje", ("Saludo: Hola ").concat(nifLogin));
 
-                String opcion = request.getParameter("opcion");
+
 
 // Si opcion es modificar sus datos personales generamos los datos para luego mostrarlo en la vista
                 if (opcion.equals("clientUpdateDaper")) {
@@ -84,17 +87,27 @@ public class ValidarClientSessionController extends HttpServlet {
                 if (dataLoginCliente.disponibilidadIntento()) {
                     request.setAttribute("mensaje", "Cliente: Intentalo otra vez");
                 } else {
-                    session.setAttribute("horaBloqueo", new Date());
-                    request.setAttribute("mensaje", "Cliente: Intentos Agotados");
-                    rd = request.getRequestDispatcher("cliente/clientBlocking.jsp");
-                }
+                        if (opcion.equals("clienteIndex")) {
+                            session.setAttribute("horaBloqueo", new Date());
+                            request.setAttribute("mensaje", "Cliente: Intentos Agotados");
+                            rd = request.getRequestDispatcher("cliente/clientBlocking.jsp");
+                        }   else {
+                            try {
+                                // Hay que bloquearlo en BBDD
+                                clienteDAO.locked_client(dataLoginCliente.getNifCliente());
+                                // enviar email
+                                rd = request.getRequestDispatcher("Mail");
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
             }
         } else {
             request.setAttribute("mensaje", ErrorManager.getErrorMessages(listaErrores));
         }
-
         rd.forward(request, response);
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws

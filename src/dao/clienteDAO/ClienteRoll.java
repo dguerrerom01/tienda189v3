@@ -84,6 +84,74 @@ public class ClienteRoll {
         return  cstmt.getBoolean(14);
     }
 
+        public Boolean deleteClient (String nif) throws SQLException {
+
+        this.conectar();
+        CallableStatement cstmt = null;
+        try {
+            cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call delete_client(?, ?)}");
+            try {
+                cstmt.setString(1, nif);
+                cstmt.registerOutParameter(2, Types.BOOLEAN);
+                cstmt.execute();
+
+            } finally {
+                if (cstmt != null) {
+                    cstmt.close();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cstmt.getBoolean(2);
+    }
+
+        public String getClaveBloqueo(String nif) throws SQLException {
+        this.conectar();
+        try{
+            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call get_clave_bloqueo(?, ?)}");
+            try{
+                cstmt.setString(1,nif);
+                cstmt.registerOutParameter(2, Types.VARCHAR);
+                cstmt.execute();
+                return  cstmt.getString(2);
+            }
+            finally {
+                if (cstmt != null) {
+                    cstmt.close();
+                }
+            }
+        }
+        catch (Exception ignore) {
+        }
+
+        return "null";
+
+    }
+
+        public String getEmailClient(String nif) throws SQLException {
+        this.conectar();
+        try{
+            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call get_email_client(?, ?)}");
+            try{
+                cstmt.setString(1,nif);
+                cstmt.registerOutParameter(2, Types.VARCHAR);
+                cstmt.execute();
+                return  cstmt.getString(2);
+            }
+            finally {
+                if (cstmt != null) {
+                    cstmt.close();
+                }
+            }
+        }
+        catch (Exception ignore) {
+        }
+
+        return "null";
+
+    }
+
         public String get_nif_login(String user, String password){
         this.conectar();
         try{
@@ -140,26 +208,14 @@ public class ClienteRoll {
         return null;
     }
 
-        public Boolean deleteClient (String nif) throws SQLException {
-
+        public boolean lockedClient(String user, String clave)throws SQLException {
             this.conectar();
-            CallableStatement cstmt = null;
-            try {
-                cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call delete_client(?, ?)}");
-                try {
-                    cstmt.setString(1, nif);
-                    cstmt.registerOutParameter(2, Types.BOOLEAN);
-                    cstmt.execute();
-
-                } finally {
-                    if (cstmt != null) {
-                        cstmt.close();
-                    }
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return cstmt.getBoolean(2);
+            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call locked_client( ?, ?, ?)}");
+            cstmt.setString(1,user);
+            cstmt.setString(2,clave);
+            cstmt.registerOutParameter(3, Types.BOOLEAN);
+            cstmt.execute();
+            return  cstmt.getBoolean(3);
         }
 
         public boolean  update_client_login(LoginClienteHarnina cliente) throws SQLException {

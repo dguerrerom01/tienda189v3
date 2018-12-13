@@ -5,8 +5,10 @@ import entity.ClienteEntity;
 import entity.DaperClienteEntity;
 import entity.LoginClienteHarnina;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ClienteDAO {
 
@@ -47,6 +49,22 @@ public class ClienteDAO {
         }
     }
 
+  public Boolean deleteClient(String nif) throws SQLException {
+        return clienteRoll.deleteClient(nif);
+    }
+
+  public String getEmailClient(String nif) throws SQLException {
+      return clienteRoll.getEmailClient(nif);
+  }
+
+  public String getClaveBloqueo(String nif) throws SQLException {
+        return clienteRoll.getClaveBloqueo(nif);
+    }
+
+  public ArrayList getListaClientes(){
+        return clienteRoll.getListaClientes();
+    }
+
   public String  get_nif_login(LoginClienteHarnina clientloginEntity) {
 
        try
@@ -61,17 +79,15 @@ public class ClienteDAO {
        return "null";
     }
 
-  public ArrayList getListaClientes(){
-       return clienteRoll.getListaClientes();
-    }
-
   public DaperClienteEntity getCliente(String nif){
         return (DaperClienteEntity) clienteRoll.getCliente(nif);
     }
 
-  public Boolean deleteClient(String nif) throws SQLException {
-      return clienteRoll.deleteClient(nif);
-  }
+  public boolean locked_client(String nif)throws SQLException {
+        String uuid = UUID.randomUUID().toString();
+        String clave = uuid.substring(0, Math.min(uuid.length(), 50));
+      return clienteRoll.lockedClient(nif, clave);
+    }
 
   public boolean update_client_login(LoginClienteHarnina cliente) throws SQLException {
       return clienteRoll.update_client_login(cliente);
@@ -81,4 +97,7 @@ public class ClienteDAO {
 
       return clienteRoll.update_client_daper(cliente,usuario);
     }
+
+
+
 }
