@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class ClienteRoll {
 
-    private AccesoDB acceso = null;
+    public AccesoDB acceso = null;
 
     private String usuario = "root";
 
