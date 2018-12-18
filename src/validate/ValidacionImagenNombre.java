@@ -4,6 +4,7 @@ package validate;
 
 import error.Error;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,7 +19,7 @@ public class ValidacionImagenNombre extends ValidacionMultiValidation implements
     }
 
 
-    public ArrayList<Error> exec(){
+    public ArrayList<Error> exec() throws SQLException, ClassNotFoundException {
 
         assertTrue(value.contains("."));
 

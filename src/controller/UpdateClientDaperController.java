@@ -41,15 +41,31 @@ public class UpdateClientDaperController extends HttpServlet {
         }
 
         ComandoValidarDaperCliente  comandosDaper = new ComandoValidarDaperCliente(dataPersonCliente.getDaperClienteEntity());
-        ArrayList<Error> errors = comandosDaper.getCommands();
+        ArrayList<Error> errors = null;
+        try {
+            errors = comandosDaper.getCommands();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         if(errors.isEmpty()) {
 
-            ClienteDAO clienteDAO = new ClienteDAO();
+            ClienteDAO clienteDAO = null;
+            try {
+                clienteDAO = new ClienteDAO();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             try {
                 if(clienteDAO.update_client_daper(dataPersonCliente.getDaperClienteEntity(), (String) session.getAttribute("usuarioCliente"))) request.setAttribute("mensaje", "Daper Modificado ");
                    else request.setAttribute("mensaje", "Daper NO se ha podido modificar");
             } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

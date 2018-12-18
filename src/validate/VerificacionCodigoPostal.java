@@ -15,7 +15,7 @@ public class VerificacionCodigoPostal implements  IValidacion {
     }
 
     @Override
-    public Error exec() {
+    public Error exec() throws SQLException, ClassNotFoundException {
 
         ClienteRoll clienteRoll = new ClienteRoll();
 

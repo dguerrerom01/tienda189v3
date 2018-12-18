@@ -53,6 +53,8 @@ public class AccesoDB {
         Statement sentence = (Statement) conexion.createStatement();
         return sentence.executeUpdate(sqlSentence);
     }
+
+
     public Connection getConexion(){
         return this.conexion;
 

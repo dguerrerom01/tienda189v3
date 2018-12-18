@@ -32,7 +32,15 @@ public class ValidarClientSessionController extends HttpServlet {
         session = request.getSession();
         String opcion = request.getParameter("opcion");
 
-        ClienteDAO clienteDAO = new ClienteDAO();
+        ClienteDAO clienteDAO = null;
+        try {
+            clienteDAO = new ClienteDAO();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
@@ -98,6 +106,8 @@ public class ValidarClientSessionController extends HttpServlet {
                                 // enviar email
                                 rd = request.getRequestDispatcher("Mail");
                             } catch (SQLException e) {
+                                e.printStackTrace();
+                            } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
 

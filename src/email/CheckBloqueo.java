@@ -28,7 +28,14 @@ public class CheckBloqueo extends HttpServlet {
         String mipassword = "";
         String claveBloqueo = "";
         String claveBBDD = "";
-        ClienteDAO clienteDAO = new ClienteDAO();
+        ClienteDAO clienteDAO = null;
+        try {
+            clienteDAO = new ClienteDAO();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         try {
             claveBBDD = clienteDAO.getClaveBloqueo((String) session.getAttribute("usuarioCliente"));
         } catch (SQLException e) {

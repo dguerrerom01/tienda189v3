@@ -4,6 +4,7 @@ import entity.DaperClienteEntity;
 import error.Error;
 import validate.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ public class ComandoValidarDaperCliente implements ComandoValidarCliente {
     }
 
     @Override
-    public ArrayList<Error> getCommands() {
+    public ArrayList<Error> getCommands() throws SQLException, ClassNotFoundException {
         ArrayList<Error> errors = new ArrayList<>();
 
         errors.add(new ValidacionDNINIECIF(daperClienteEntity.getNifCliente()).exec());

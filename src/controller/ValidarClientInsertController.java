@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @WebServlet("/valiCliIn")
@@ -43,13 +44,26 @@ public class ValidarClientInsertController extends HttpServlet {
 
         ArrayList<Error> errors = new ArrayList<>();
 
-        errors = (new ComandoValidarDaperCliente(dataPersonCliente.getDaperClienteEntity()).getCommands());
+        try {
+            errors = (new ComandoValidarDaperCliente(dataPersonCliente.getDaperClienteEntity()).getCommands());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         errors.addAll(new ComandoValidarLoginCliente(dataPersonCliente.getLoginClienteEntity()).getCommands());
 
         if(errors.isEmpty()) {
             clientFotoLoad(request, response);
             dataPersonCliente.setImagenCliente(dataPersonCliente.getNifCliente() + ".png");
-            ClienteDAO clienteDAO = new ClienteDAO();
+            ClienteDAO clienteDAO = null;
+            try {
+                clienteDAO = new ClienteDAO();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
 
             if (clienteDAO.add_cliente_procedure(dataPersonCliente)) {
                 request.setAttribute("mensaje", "Cliente add");

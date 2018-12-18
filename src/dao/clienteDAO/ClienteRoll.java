@@ -1,14 +1,14 @@
 package dao.clienteDAO;
 
 import cliente.DataPersonCliente;
-import dao.AccesoDB;
-import entity.DaperClienteEntity;
-import reflexion.RsTransferArraylist;
+import com.mysql.jdbc.CallableStatement;
+import dao.poolConexion.ClienteMySqlConnectionPool;
 import entity.ClienteEntity;
+import entity.DaperClienteEntity;
 import entity.LoginClienteHarnina;
+import reflexion.RsTransferArraylist;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -17,11 +17,13 @@ import java.util.ArrayList;
 
 public class ClienteRoll {
 
-    public AccesoDB acceso = null;
+    private final  String usuario = "root";
 
-    private String usuario = "root";
+    private final  String pass = "";
 
-    private String pass = "";
+    private final int conexionesIniciales = 3;
+
+    private final int conexionesMaximas = 5;
 
     public String getUsuario() {
         return usuario;
@@ -31,41 +33,17 @@ public class ClienteRoll {
         return pass;
     }
 
+    ClienteMySqlConnectionPool clienteConnectionPool = null;
 
+      public  ClienteRoll() throws SQLException, ClassNotFoundException {
 
-    private void conectar() {
-        acceso = AccesoDB.getMiConexion();
-        try {
-            acceso.conectar("com.mysql.jdbc.Driver", //com.mysql.cj.jdbc.Driver",
-                    "jdbc:mysql://localhost/tienda_harnina20189vistas?useInformationSchema=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
-                    this.usuario,
-                    this.pass);
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        clienteConnectionPool = new ClienteMySqlConnectionPool(usuario, pass, conexionesIniciales, conexionesMaximas);
+        clienteConnectionPool.useConnection(); // Se crea el pool
     }
 
-    //Un objeto ResultSet mantiene un cursor que apunta a su fila actual de datos. Inicialmente el cursor se coloca antes de la primera fila.
-        public ResultSet getCursor(String sql) throws SQLException {
-        this.conectar();
-        ResultSet cursor = acceso.executeQuery(sql);
-        return cursor;
-    }
+      public boolean  add_cliente(DataPersonCliente cliente) throws SQLException, ClassNotFoundException {
 
-        public int insertUpdateDelete(String sql) throws SQLException {
-        this.conectar();
-        return acceso.executeUpdate(sql);
-    }
-
-    // Uso de procedures
-
-        public boolean  add_cliente(DataPersonCliente cliente) throws SQLException {
-        this.conectar();
-        CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call add_cliente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        CallableStatement cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call add_cliente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
         cstmt.setString(1,cliente.getNifCliente());
         cstmt.setString(2,cliente.getApellidosCliente());
         cstmt.setString(3,cliente.getNombreCliente());
@@ -84,12 +62,11 @@ public class ClienteRoll {
         return  cstmt.getBoolean(14);
     }
 
-        public Boolean deleteClient (String nif) throws SQLException {
+      public Boolean deleteClient (String nif) throws SQLException {
 
-        this.conectar();
         CallableStatement cstmt = null;
         try {
-            cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call delete_client(?, ?)}");
+            cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call delete_client(?, ?)}");
             try {
                 cstmt.setString(1, nif);
                 cstmt.registerOutParameter(2, Types.BOOLEAN);
@@ -102,14 +79,15 @@ public class ClienteRoll {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return cstmt.getBoolean(2);
     }
 
-        public String getClaveBloqueo(String nif) throws SQLException {
-        this.conectar();
+      public String getClaveBloqueo(String nif) throws SQLException {
         try{
-            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call get_clave_bloqueo(?, ?)}");
+            CallableStatement cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call get_clave_bloqueo(?, ?)}");
             try{
                 cstmt.setString(1,nif);
                 cstmt.registerOutParameter(2, Types.VARCHAR);
@@ -129,75 +107,11 @@ public class ClienteRoll {
 
     }
 
-        public String getEmailClient(String nif) throws SQLException {
-        this.conectar();
-        try{
-            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call get_email_client(?, ?)}");
-            try{
-                cstmt.setString(1,nif);
-                cstmt.registerOutParameter(2, Types.VARCHAR);
-                cstmt.execute();
-                return  cstmt.getString(2);
-            }
-            finally {
-                if (cstmt != null) {
-                    cstmt.close();
-                }
-            }
-        }
-        catch (Exception ignore) {
-        }
+      public DaperClienteEntity getCliente(String dni) {
 
-        return "null";
-
-    }
-
-        public String get_nif_login(String user, String password){
-        this.conectar();
-        try{
-            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call get_nif_login(?, ?, ?)}");
-           try{
-                cstmt.setString(1,user);
-                cstmt.setString(2,password);
-                cstmt.registerOutParameter(3, Types.VARCHAR);
-                cstmt.execute();
-                return  cstmt.getString(3);
-           }
-           finally {
-               if (cstmt != null) {
-                   cstmt.close();
-               }
-           }
-        }
-        catch (Exception ignore) {
-        }
-
-        return "null";
-    }
-
-        public ArrayList<?> getListaClientes() {
-
-        this.conectar();
-
-        String clase = ClienteEntity.class.getName();
-
-        try {
-
-            return new RsTransferArraylist().getListGenericObject((CallableStatement) acceso.getConexion().prepareCall("{call getListaClientes()}"), clase);
-
-        } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException | InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-        public DaperClienteEntity getCliente(String dni) {
-        this.conectar();
         String clase = DaperClienteEntity.class.getName();
         try {
-            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call get_daper_cliente(?)}");
+            CallableStatement cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call get_daper_cliente(?)}");
             cstmt.setString(1, dni);
             return (DaperClienteEntity) new RsTransferArraylist().getGenericObject(cstmt, clase);
         } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException | InvocationTargetException e) {
@@ -208,19 +122,115 @@ public class ClienteRoll {
         return null;
     }
 
-        public boolean lockedClient(String user, String clave)throws SQLException {
-            this.conectar();
-            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call locked_client( ?, ?, ?)}");
-            cstmt.setString(1,user);
-            cstmt.setString(2,clave);
-            cstmt.registerOutParameter(3, Types.BOOLEAN);
-            cstmt.execute();
-            return  cstmt.getBoolean(3);
+      public ResultSet getCursor(String sql) throws SQLException {
+
+        ResultSet cursor = clienteConnectionPool.getCursor(sql);
+        return cursor;
+    }
+
+      public String getEmailClient(String nif) throws SQLException {
+        try{
+            CallableStatement cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call get_email_client(?, ?)}");
+            try{
+                cstmt.setString(1,nif);
+                cstmt.registerOutParameter(2, Types.VARCHAR);
+                cstmt.execute();
+                return  cstmt.getString(2);
+            }
+            finally {
+                if (cstmt != null) {
+                    cstmt.close();
+                }
+            }
+        }
+        catch (Exception ignore) {
         }
 
-        public boolean  update_client_login(LoginClienteHarnina cliente) throws SQLException {
-        this.conectar();
-        CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call update_client_login( ?, ?, ?, ?)}");
+        return "null";
+
+    }
+
+      public ArrayList<?> getListaClientes() {
+
+        String clase = ClienteEntity.class.getName();
+
+        try {
+
+            return new RsTransferArraylist().getListGenericObject((CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call getListaClientes()}"), clase);
+
+        } catch (SQLException | IllegalAccessException | InstantiationException | ClassNotFoundException | InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+      public String get_nif_login(String user, String password) throws SQLException, ClassNotFoundException {
+
+          System.out.println("Mi conexión" + clienteConnectionPool.getConnection());
+
+        try{
+            CallableStatement cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call get_nif_login(?, ?, ?)}");
+            try{
+                cstmt.setString(1,user);
+                cstmt.setString(2,password);
+                cstmt.registerOutParameter(3, Types.VARCHAR);
+                cstmt.execute();
+                return  cstmt.getString(3);
+            }
+            finally {
+                if (cstmt != null) {
+                    cstmt.close();
+                }
+            }
+        }
+        catch (Exception ignore) {
+        }
+
+        return "error:ClienteRoll.get_nif_login()";
+    }
+
+      public int insertUpdateDelete(String sql) throws SQLException {
+
+        return clienteConnectionPool.insertUpdateDelete(sql);
+    }
+
+      public boolean lockedClient(String user, String clave) throws SQLException, ClassNotFoundException {
+
+        CallableStatement cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call locked_client( ?, ?, ?)}");
+        cstmt.setString(1,user);
+        cstmt.setString(2,clave);
+        cstmt.registerOutParameter(3, Types.BOOLEAN);
+        cstmt.execute();
+        return  cstmt.getBoolean(3);
+    }
+
+      public boolean update_client_daper (DaperClienteEntity cliente, String usuario) throws SQLException, ClassNotFoundException {
+
+        CallableStatement cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call update_client_daper( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        cstmt.setString(1,usuario);
+        System.out.println("usuarioCliente ROLL:"+ usuario);
+        cstmt.setString(2,cliente.getNifCliente());
+        cstmt.setString(3,cliente.getApellidosCliente());
+        cstmt.setString(4,cliente.getNombreCliente());
+        cstmt.setString(5,cliente.getCodigoPostalCliente());
+        cstmt.setString(6,cliente.getDomicilioCliente());
+        System.out.println("domicilioCliente ROLL:"+ cliente.getDomicilioCliente());
+        cstmt.setString(7,cliente.getFechaNacimiento());
+
+        cstmt.setString(8,cliente.getTelefonoCliente());
+        cstmt.setString(9,cliente.getMovilCliente());
+        cstmt.setString(10,cliente.getSexoCliente());
+        cstmt.setString(11,cliente.getEmailCliente());
+        cstmt.registerOutParameter(12, Types.BOOLEAN);
+        cstmt.execute();
+        return  cstmt.getBoolean(12);
+    }
+
+      public boolean  update_client_login(LoginClienteHarnina cliente) throws SQLException, ClassNotFoundException {
+
+        CallableStatement cstmt = (CallableStatement) clienteConnectionPool.getConnection().prepareCall("{call update_client_login( ?, ?, ?, ?)}");
         cstmt.setString(3,cliente.getNifCliente());
         cstmt.setString(1,cliente.getUsuarioCliente());
         cstmt.setString(2,cliente.getPasswordCliente());
@@ -228,27 +238,5 @@ public class ClienteRoll {
         cstmt.execute();
         return  cstmt.getBoolean(4);
     }
+}
 
-        public boolean update_client_daper (DaperClienteEntity cliente, String usuario) throws SQLException {
-            this.conectar();
-            CallableStatement cstmt = (CallableStatement) acceso.getConexion().prepareCall("{call update_client_daper( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-            cstmt.setString(1,usuario);
-            System.out.println("usuarioCliente ROLL:"+ usuario);
-            cstmt.setString(2,cliente.getNifCliente());
-            cstmt.setString(3,cliente.getApellidosCliente());
-            cstmt.setString(4,cliente.getNombreCliente());
-            cstmt.setString(5,cliente.getCodigoPostalCliente());
-            cstmt.setString(6,cliente.getDomicilioCliente());
-            System.out.println("domicilioCliente ROLL:"+ cliente.getDomicilioCliente());
-            cstmt.setString(7,cliente.getFechaNacimiento());
-
-            cstmt.setString(8,cliente.getTelefonoCliente());
-            cstmt.setString(9,cliente.getMovilCliente());
-            cstmt.setString(10,cliente.getSexoCliente());
-            cstmt.setString(11,cliente.getEmailCliente());
-            cstmt.registerOutParameter(12, Types.BOOLEAN);
-            cstmt.execute();
-            return  cstmt.getBoolean(12);
-        }
-
-    }

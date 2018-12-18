@@ -26,7 +26,14 @@ public class DeleteClientController extends HttpServlet {
 
         response.setContentType("text/html");
 
-        ClienteDAO clienteDAO = new ClienteDAO();
+        ClienteDAO clienteDAO = null;
+        try {
+            clienteDAO = new ClienteDAO();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         try {
             if(clienteDAO.deleteClient((String) session.getAttribute("nifClient"))) request.setAttribute("mensaje", "Cliente eliminado");

@@ -2,6 +2,7 @@ package validate;
 
 import error.Error;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class ValidacionMultiValidation {
 
     ArrayList<Error> listaErrores = new ArrayList<>();
 
-    protected ArrayList<Error> validar(IValidacion validadores[]) {
+    protected ArrayList<Error> validar(IValidacion validadores[]) throws SQLException, ClassNotFoundException {
 
         for (int i = 0; i < validadores.length; i++) {
 
@@ -20,7 +21,7 @@ public class ValidacionMultiValidation {
         }
         return listaErrores;
     }
-    public static ArrayList<Error> validar(List<IValidacion> validador ) {
+    public static ArrayList<Error> validar(List<IValidacion> validador ) throws SQLException, ClassNotFoundException {
 
         ArrayList<Error> errors = new ArrayList<>();
 

@@ -43,7 +43,14 @@ public class MailServlet extends HttpServlet {
         String clave = "";
         int perfil = 0;
 
-        ClienteDAO clienteDAO = new ClienteDAO();
+        ClienteDAO clienteDAO = null;
+        try {
+            clienteDAO = new ClienteDAO();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         System.out.println("nif client" + nif_client);
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
@@ -72,6 +79,8 @@ public class MailServlet extends HttpServlet {
              clave = new ClienteDAO().getClaveBloqueo(nif_client);
             System.out.println("clave in MailServlet" + clave);
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         if (clave != null) {

@@ -32,6 +32,8 @@ public class UpdateClientLoginController extends HttpServlet {
 
         DataLoginCliente dataLoginCliente = null;
 
+        ClienteDAO clienteDAO = null;
+
         try {
             dataLoginCliente = new DataLoginCliente(request);
 
@@ -43,14 +45,23 @@ public class UpdateClientLoginController extends HttpServlet {
         ArrayList<Error> errors = comandosLogin.getCommands();
 
         if(errors.isEmpty()) {
-            ClienteDAO clienteDAO = new ClienteDAO();
 
-            dataLoginCliente.setUsuarioCliente((String) session.getAttribute("nifClient"));
+            try {
+                clienteDAO = new ClienteDAO();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            dataLoginCliente.setNifCliente((String) session.getAttribute("nifCliente"));
 
             try {
                 if( clienteDAO.update_client_login(dataLoginCliente.getLoginClienteEntity())) request.setAttribute("mensaje", "Login Modificado ");
                 else request.setAttribute("mensaje", "Login NO se ha podido modificar");
             } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
