@@ -25,6 +25,7 @@ public class ClienteH2ConnectionPool {
     }
 
    synchronized public void createTables(){
+
         try {
             h2ConnectionPool.executeUpdate("create table CLIENTE (ID VARCHAR(3), NAME VARCHAR(45), DESIGNATION VARCHAR(15))");
             h2ConnectionPool.executeUpdate("create table CLIENTE_ADDRESS (ID VARCHAR(3), EMP_ID VARCHAR(36), ADDRESS VARCHAR(45))");
@@ -36,12 +37,15 @@ public class ClienteH2ConnectionPool {
 
    synchronized public void addTables() throws SQLException {
 
-    String newEmployeeSQL = "INSERT INTO CLIENTE(ID, NAME, DESIGNATION) VALUES ('1','Luis','Programador');";
-    String newEmployeeAddrSQL = "INSERT INTO CLIENTE_ADDRESS(ID, EMP_ID, ADDRESS) VALUES ('1','1','Coria s/n');";
-    h2ConnectionPool.executeUpdate(newEmployeeSQL);
-    h2ConnectionPool.executeUpdate(newEmployeeAddrSQL);
+      h2ConnectionPool.iniciarTransaccion();
 
-}
+      String newEmployeeSQL = "INSERT INTO CLIENTE(ID, NAME, DESIGNATION) VALUES ('3','María','Programadora');";
 
+      String newEmployeeAddrSQL = "INSERT INTO CLIENTE_ADDRESS(ID, EMP_ID, ADDRESS) VALUES ('Lusitania s/n');";
 
+      if (h2ConnectionPool.executeUpdate(newEmployeeSQL)>0 &&  h2ConnectionPool.executeUpdate(newEmployeeAddrSQL)>0){
+         h2ConnectionPool.aceptarTransaccion();
+      }else h2ConnectionPool.cancelarTransaccion();
+
+   }
 }

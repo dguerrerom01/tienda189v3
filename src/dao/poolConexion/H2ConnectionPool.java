@@ -2,7 +2,9 @@ package dao.poolConexion;
 
 
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class H2ConnectionPool {
     private   String url = null;
@@ -29,5 +31,25 @@ public class H2ConnectionPool {
 
     synchronized public int executeUpdate(String sqlSentence) throws SQLException {
         return  useConnectionPool.executeUpdate(sqlSentence);
+    }
+
+    synchronized public ResultSet executeQuery(String sqlSentence) throws SQLException{
+        if(useConnectionPool.connection == null) return null;
+        Statement sentence = (Statement) useConnectionPool.connection.createStatement();
+        return sentence.executeQuery(sqlSentence);
+    }
+
+    synchronized public void iniciarTransaccion() throws SQLException{
+        useConnectionPool.connection.setAutoCommit(false);
+    }
+
+    synchronized public void aceptarTransaccion() throws SQLException{
+        useConnectionPool.connection.commit();
+        useConnectionPool.connection.setAutoCommit(true);
+    }
+
+    synchronized public void cancelarTransaccion() throws SQLException{
+        useConnectionPool.connection.rollback();
+        useConnectionPool.connection.setAutoCommit(true);
     }
 }

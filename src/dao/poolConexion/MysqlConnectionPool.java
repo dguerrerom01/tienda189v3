@@ -41,5 +41,17 @@ public class MysqlConnectionPool {
         return useConnectionPool.executeQuery(sqlSentence);
     }
 
+    synchronized public void iniciarTransaccion() throws SQLException{
+        useConnectionPool.connection.setAutoCommit(false);
+    }
 
+    synchronized public void aceptarTransaccion() throws SQLException{
+        useConnectionPool.connection.commit();
+        useConnectionPool.connection.setAutoCommit(true);
+    }
+
+    synchronized public void cancelarTransaccion() throws SQLException{
+        useConnectionPool.connection.rollback();
+        useConnectionPool.connection.setAutoCommit(true);
+    }
 }

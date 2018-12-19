@@ -26,15 +26,17 @@ public class ClienteMySqlConnectionPool {
         mysqlConnectionPool = new MysqlConnectionPool(url,user,password,conexionesIniciales,conexionesMaximas);
         mysqlConnectionPool.useConnection();
     }
+
     public Connection getConnection() throws SQLException, ClassNotFoundException {
         return   mysqlConnectionPool.getConnection();
     }
+
     synchronized public int update(String nif, String newUser) throws SQLException {
        String sqlSentence = "UPDATE `login_cliente` SET `usuario`= '" + newUser +"'  WHERE `dni` = '" + nif + "'";
        return  mysqlConnectionPool.executeUpdate(sqlSentence);
     }
 
-    public int insertUpdateDelete(String sql) throws SQLException {
+    synchronized public int insertUpdateDelete(String sql) throws SQLException {
 
         return mysqlConnectionPool.executeUpdate(sql);
     }
@@ -43,5 +45,17 @@ public class ClienteMySqlConnectionPool {
 
         ResultSet cursor = mysqlConnectionPool.executeQuery(sql);
         return cursor;
+    }
+
+    synchronized public void iniciarTransaccion() throws SQLException{
+        mysqlConnectionPool.iniciarTransaccion();
+    }
+
+    synchronized public void aceptarTransaccion() throws SQLException{
+        mysqlConnectionPool.aceptarTransaccion();
+    }
+
+    synchronized public void cancelarTransaccion() throws SQLException{
+        mysqlConnectionPool.cancelarTransaccion();
     }
 }
